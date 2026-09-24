@@ -1,5 +1,8 @@
-// Initial Menu Dataset
-let menuItems = [
+// Storage Key
+const STORAGE_KEY = 'kiteezi_menu_data';
+
+// Initial Menu Fallback
+const defaultMenuItems = [
   { id: 1, name: "Whole Fish", price: 35000, category: "fish", requiresSides: true, inStock: true, img: "https://i.ibb.co/68S7mG8/fish.png" },
   { id: 2, name: "Fish Fillet (Tilapia)", price: 18000, category: "fish", requiresSides: true, inStock: true, img: "https://i.ibb.co/68S7mG8/fish.png" },
   { id: 3, name: "Kiteezi Fried Chicken (KFC)", price: 12000, category: "chicken", requiresSides: true, inStock: true, img: "https://i.ibb.co/xS9B9tL/chicken.png" },
@@ -9,6 +12,18 @@ let menuItems = [
   { id: 7, name: "Beef Burger", price: 12000, category: "burgers-pizza", requiresSides: false, inStock: true, img: "https://i.ibb.co/1n9mJtL/burger.png" },
   { id: 8, name: "Ordinary Rolex", price: 4000, category: "breakfast", requiresSides: false, inStock: true, img: "https://i.ibb.co/1n9mJtL/burger.png" }
 ];
+
+// Load local items or default
+function getStoredMenuItems() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored ? JSON.parse(stored) : defaultMenuItems;
+}
+
+function saveMenuItems(items) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+let menuItems = getStoredMenuItems();
 
 const sideOptions = [
   "White Rice (5,000 UGX)",
@@ -31,10 +46,13 @@ const prepOptionsMap = {
 let cart = [];
 let currentSelectedItem = null;
 
-// RENDER MENU
+// RENDER MENU PAGE
 function renderMenuItems(category = 'all') {
   const grid = document.getElementById('menu-grid');
+  if(!grid) return;
+
   grid.innerHTML = '';
+  menuItems = getStoredMenuItems();
 
   const filtered = category === 'all' 
     ? menuItems 
@@ -72,7 +90,6 @@ function openCustomizeModal(id) {
   document.getElementById('modal-item-name').innerText = currentSelectedItem.name;
   document.getElementById('modal-item-price').innerText = `${currentSelectedItem.price.toLocaleString()} UGX`;
   
-  // Preparation options
   const prepContainer = document.getElementById('prep-options-container');
   prepContainer.innerHTML = '';
   const preps = prepOptionsMap[currentSelectedItem.category] || ["Standard Preparation"];
@@ -82,7 +99,6 @@ function openCustomizeModal(id) {
     `;
   });
 
-  // Sides options
   const sidesContainer = document.getElementById('side-options-container');
   const sideGroup = document.getElementById('side-group');
   sidesContainer.innerHTML = '';
@@ -106,7 +122,7 @@ function closeModal(modalId) {
   document.getElementById(modalId).style.display = 'none';
 }
 
-// CART FUNCTIONS
+// CART SYSTEM
 function confirmAddToCart() {
   const prepChoice = document.querySelector('input[name="prep-choice"]:checked')?.value || 'Standard';
   const sideChoice = currentSelectedItem.requiresSides ? document.querySelector('input[name="side-choice"]:checked')?.value : 'None';
@@ -128,11 +144,15 @@ function confirmAddToCart() {
 }
 
 function updateCartUI() {
-  document.getElementById('cart-badge-count').innerText = cart.length;
-  const cartList = document.getElementById('cart-items-list');
-  cartList.innerHTML = '';
+  const badge = document.getElementById('cart-badge-count');
+  if(badge) badge.innerText = cart.length;
 
+  const cartList = document.getElementById('cart-items-list');
+  if(!cartList) return;
+
+  cartList.innerHTML = '';
   let total = 0;
+
   cart.forEach(item => {
     total += item.price;
     cartList.innerHTML += `
@@ -159,6 +179,7 @@ function removeFromCart(cartId) {
 
 function toggleCartDrawer(forceOpen = false) {
   const drawer = document.getElementById('cart-drawer');
+  if (!drawer) return;
   if (forceOpen) {
     drawer.classList.add('open');
   } else {
@@ -166,7 +187,7 @@ function toggleCartDrawer(forceOpen = false) {
   }
 }
 
-// CHECKOUT TO WHATSAPP
+// WHATSAPP CHECKOUT
 function checkoutToWhatsApp() {
   if (cart.length === 0) {
     alert("Your cart is empty!");
@@ -198,15 +219,11 @@ function checkoutToWhatsApp() {
   message += `\n*TOTAL AMOUNT:* ${total.toLocaleString()} UGX`;
 
   const encodedMsg = encodeURIComponent(message);
-  const whatsappNumber = "256700000000"; // Replace with real venue number
+  const whatsappNumber = "256700000000"; // Venue contact number
   window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, '_blank');
 }
 
-// ADMIN DASHBOARD LOGIC
-function openAdminModal() {
-  document.getElementById('admin-modal').style.display = 'flex';
-}
-
+// ADMIN FUNCTIONS
 function handleAdminLogin(e) {
   e.preventDefault();
   const pass = document.getElementById('admin-pass-input').value;
@@ -215,18 +232,25 @@ function handleAdminLogin(e) {
     document.getElementById('admin-dashboard-view').style.display = 'block';
     renderAdminMenuList();
   } else {
-    alert("Incorrect admin password.");
+    alert("Incorrect admin passcode.");
   }
 }
 
 function renderAdminMenuList() {
   const list = document.getElementById('admin-menu-render-list');
+  if (!list) return;
+
   list.innerHTML = '';
+  menuItems = getStoredMenuItems();
+
   menuItems.forEach(item => {
     list.innerHTML += `
-      <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #ddd;">
-        <span>${item.name} (${item.price.toLocaleString()} UGX)</span>
-        <button onclick="deleteMenuItem(${item.id})" style="color:red; border:none; background:none; cursor:pointer;">Delete</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:1px solid #e2e8f0;">
+        <div>
+          <strong>${item.name}</strong> 
+          <br><small>${item.price.toLocaleString()} UGX - Category: ${item.category}</small>
+        </div>
+        <button onclick="deleteMenuItem(${item.id})" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-trash"></i></button>
       </div>
     `;
   });
@@ -245,18 +269,19 @@ function handleSaveMenuItem(e) {
   };
 
   menuItems.push(newItem);
+  saveMenuItems(menuItems);
   renderAdminMenuList();
-  renderMenuItems('all');
-  alert("Item saved successfully!");
+  alert("New item added successfully!");
   document.getElementById('add-menu-form').reset();
 }
 
 function deleteMenuItem(id) {
   menuItems = menuItems.filter(i => i.id !== id);
+  saveMenuItems(menuItems);
   renderAdminMenuList();
-  renderMenuItems('all');
 }
 
+// AUTO INIT
 document.addEventListener('DOMContentLoaded', () => {
   renderMenuItems('all');
 });
