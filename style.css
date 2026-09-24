@@ -507,3 +507,357 @@ footer {
   .nav-links { display: none; }
   .admin-content-grid { grid-template-columns: 1fr; }
 }
+/* =========================================================
+   ADMIN ADDITIONS
+========================================================= */
+
+.admin-section {
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.admin-section h2 {
+  margin-bottom: 15px;
+}
+
+.admin-card label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.admin-card input,
+.admin-card textarea,
+.admin-card select {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 15px;
+}
+
+.admin-header span {
+  display: block;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.admin-logout-btn {
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-form-box {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.admin-form-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-form-box button {
+  margin-top: 8px;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+.checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.checkbox-row input {
+  width: auto;
+  margin: 0;
+}
+
+.admin-menu-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-menu-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-menu-info small {
+  color: #64748b;
+}
+
+.admin-menu-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.admin-edit-btn,
+.admin-delete-btn {
+  border: none;
+  color: white;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-edit-btn {
+  background: #2563eb;
+}
+
+.admin-delete-btn {
+  background: #dc3545;
+}
+
+
+/* =========================================================
+   MEDIA ADMIN
+========================================================= */
+
+.admin-media-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 15px;
+  align-items: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-media-preview img,
+.admin-media-preview video {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.admin-media-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-media-details span,
+.admin-media-details small {
+  color: #64748b;
+}
+
+
+/* =========================================================
+   PERSONNEL ADMIN
+========================================================= */
+
+.admin-person-row {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-person-row img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.admin-person-row div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-person-row small {
+  color: #64748b;
+}
+
+
+/* =========================================================
+   PUBLIC MEDIA
+========================================================= */
+
+.media-gallery {
+  position: relative;
+  overflow: hidden;
+}
+
+.media-slide {
+  display: none;
+  width: 100%;
+}
+
+.media-slide.active {
+  display: block;
+}
+
+.media-slide img,
+.media-slide video {
+  width: 100%;
+  height: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.gallery-prev,
+.gallery-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.65);
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.gallery-prev {
+  left: 12px;
+}
+
+.gallery-next {
+  right: 12px;
+}
+
+
+/* =========================================================
+   PERSONNEL PUBLIC PAGE
+========================================================= */
+
+.personnel-container {
+  width: min(1100px, 92%);
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(260px, 1fr)
+  );
+  gap: 25px;
+}
+
+.personnel-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.personnel-image {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.personnel-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.personnel-info {
+  padding: 20px;
+  text-align: center;
+}
+
+.personnel-info h2 {
+  margin-bottom: 5px;
+}
+
+.personnel-info h3 {
+  color: var(--primary-red);
+  margin-bottom: 10px;
+}
+
+.personnel-intro {
+  background: var(--bg-dark);
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.personnel-intro p {
+  max-width: 700px;
+  margin: 10px auto;
+}
+
+.empty-team {
+  text-align: center;
+  width: 100%;
+  padding: 50px;
+}
+
+
+/* =========================================================
+   MOBILE ADMIN
+========================================================= */
+
+@media(max-width: 700px) {
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-media-row {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .admin-media-row button {
+    grid-column: 1 / -1;
+  }
+
+  .admin-person-row {
+    grid-template-columns: 60px 1fr;
+  }
+
+  .admin-person-row > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+}
