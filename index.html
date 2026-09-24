@@ -3,34 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kiteezi Recreational Center</title>
+  <title>Kiteezi Recreational Center | Pool, Events, Sports Bar & Restaurant</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="announcement-bar">
+    <i class="fa-solid fa-water-ladder"></i> Special Event: Pool Party Every Last Saturday of the Month! Join Us For Live Music & Drinks!
+  </div>
+
+  <!-- NAVIGATION BAR -->
   <header class="navbar">
     <div class="logo">Kiteezi <span>Recreational Center</span></div>
-    <nav>
+    <nav class="nav-links">
       <a href="#hero">Home</a>
-      <a href="#swimming">Swimming Pool</a>
+      <a href="#swimming">Swimming</a>
       <a href="#events">Events & Weddings</a>
-      <a href="#bar">Bar & Sports</a>
-      <a href="#games">Games & Fun</a>
+      <a href="#bar">Sports Bar</a>
+      <a href="#games">Games Zone</a>
       <a href="#restaurant">Restaurant Menu</a>
-      <a href="#contact" class="btn-primary">Book Now</a>
     </nav>
+    <div class="header-actions">
+      <button class="cart-btn" onclick="toggleCartDrawer()">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cart-badge-count">0</span>
+      </button>
+      <button class="admin-link-btn" onclick="openAdminModal()">
+        <i class="fa-solid fa-lock"></i> Admin
+      </button>
+    </div>
   </header>
 
   <!-- HERO SECTION -->
   <section id="hero" class="hero">
     <div class="hero-overlay">
       <h1>Welcome to Kiteezi Recreational Center</h1>
-      <p>Your Ultimate Destination for Fun, Dining, Sports, and Unforgettable Events</p>
+      <p>Your premier destination for swimming, dining, sports screenings, weddings, and family fun.</p>
       <div class="hero-buttons">
-        <a href="#restaurant" class="btn-primary">View Restaurant Menu</a>
-        <a href="#events" class="btn-secondary">Host An Event</a>
+        <a href="#restaurant" class="btn-primary"><i class="fa-solid fa-utensils"></i> View Menu & Order</a>
+        <a href="#swimming" class="btn-secondary"><i class="fa-solid fa-person-swimming"></i> Swimming Lessons</a>
       </div>
     </div>
   </section>
@@ -39,88 +52,85 @@
   <section id="swimming" class="section dark-bg">
     <div class="container">
       <h2><i class="fa-solid fa-water-ladder"></i> Swimming Pool & Lessons</h2>
-      <p class="subtitle">Relax, Learn, and Celebrate by the Pool</p>
+      <p class="subtitle">Clean, safe, and exciting pool facilities for kids and adults</p>
       <div class="cards-grid">
         <div class="card">
           <i class="fa-solid fa-person-swimming icon"></i>
           <h3>Daily Swimming</h3>
-          <p>Clean, well-maintained pool suitable for adults and children. Perfect for a refreshing dip or weekend leisure.</p>
+          <p>Enjoy relaxed leisure swimming in our standard hygienic pool with dedicated lifeguards on duty.</p>
         </div>
         <div class="card highlight">
-          <i class="fa-solid fa-calendar-star icon"></i>
+          <i class="fa-solid fa-champagne-glasses icon"></i>
           <h3>Monthly Pool Party</h3>
-          <p>Join us <strong>every last Saturday of the month</strong> for live DJ sets, poolside bites, cocktails, and swimming games!</p>
+          <p>Held <strong>Every Last Saturday of the Month</strong>! Featuring top DJs, poolside cocktails, sizzling meat, and group games.</p>
         </div>
         <div class="card">
           <i class="fa-solid fa-graduation-cap icon"></i>
-          <h3>Swimming Lessons</h3>
-          <p>Professional swimming instructors available for beginners and advanced swimmers of all age groups.</p>
+          <h3>Professional Lessons</h3>
+          <p>Certified instructors offering beginner to advanced swimming courses for both children and adults.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- EVENTS & WEDDINGS -->
+  <!-- EVENTS & WEDDINGS SECTION -->
   <section id="events" class="section">
     <div class="container">
-      <h2><i class="fa-solid fa-champagne-glasses"></i> Events & Celebrations</h2>
-      <p class="subtitle">Spacious venues designed for your special occasions</p>
+      <h2><i class="fa-solid fa-holly-berry"></i> Events, Weddings & Receptions</h2>
+      <p class="subtitle">Spacious lawns and event spaces designed for all life’s big celebrations</p>
       <div class="cards-grid">
         <div class="card">
+          <i class="fa-solid fa-ring icon"></i>
           <h3>Weddings & Receptions</h3>
-          <p>Host elegant wedding ceremonies and receptions with customizable outdoor and indoor arrangements.</p>
+          <p>Scenic outdoor grounds capable of hosting large guest capacity with flexible catering setups.</p>
         </div>
         <div class="card">
-          <h3>Birthday Parties</h3>
-          <p>Memorable birthday setups for both adults and kids, complete with customized catering options.</p>
+          <i class="fa-solid fa-cake-candles icon"></i>
+          <h3>Birthday Celebrations</h3>
+          <p>Private birthday spaces with tailored decoration packages and customized food menus.</p>
         </div>
         <div class="card">
-          <h3>Corporate & Private Events</h3>
-          <p>Ideal space for team building, product launches, family reunions, and anniversaries.</p>
+          <i class="fa-solid fa-users icon"></i>
+          <h3>Corporate Gatherings</h3>
+          <p>Team building exercises, end-of-year parties, and corporate luncheons in a pleasant environment.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- BAR & SPORTS -->
+  <!-- SPORTS BAR SECTION -->
   <section id="bar" class="section dark-bg">
     <div class="container">
-      <h2><i class="fa-solid fa-glass-cheers"></i> Sports Bar & Lounge</h2>
-      <p class="subtitle">Cold drinks, good food, and live match screenings</p>
-      <div class="bar-content">
-        <div class="bar-text">
-          <h3>Live Sports Screening</h3>
-          <p>Catch every Premier League, Champions League, and local sports match live on big HD screens with ambient surround sound.</p>
-          <ul class="check-list">
-            <li>Fully stocked bar with local & imported beers, wines, and spirits</li>
-            <li>Cold cocktails & fresh juices</li>
-            <li>Plentiful seating with indoor and poolside lounge options</li>
-          </ul>
-        </div>
+      <h2><i class="fa-solid fa-tv"></i> Sports Bar & Lounge</h2>
+      <p class="subtitle">Catch every match live on big screens with cold drinks & crisp audio</p>
+      <div class="bar-info-box">
+        <p><i class="fa-solid fa-check-circle"></i> Showing Premier League, Champions League, La Liga, & International Sports</p>
+        <p><i class="fa-solid fa-check-circle"></i> Fully stocked bar: Beers, Spirits, Wine, Fresh Juices, and Smoothies</p>
+        <p><i class="fa-solid fa-check-circle"></i> Poolside lounge seating and delicious bar bites served straight to your table</p>
       </div>
     </div>
   </section>
 
-  <!-- GAMES & ACTIVITIES -->
+  <!-- GAMES & KIDS ZONE SECTION -->
   <section id="games" class="section">
     <div class="container">
-      <h2><i class="fa-solid fa-gamepad"></i> Games & Kids Fun Zone</h2>
-      <p class="subtitle">Entertainment for all ages</p>
+      <h2><i class="fa-solid fa-gamepad"></i> Games & Recreation Area</h2>
+      <p class="subtitle">Active fun for sports lovers and young children</p>
       <div class="cards-grid">
         <div class="card">
-          <i class="fa-solid fa-football icon"></i>
+          <i class="fa-solid fa-futbol icon"></i>
           <h3>Football Field</h3>
-          <p>Open ground space for friendly matches, kickabouts, and sports events.</p>
+          <p>Open grassy pitch ideal for friendly kickabouts, tournaments, and recreational sports.</p>
         </div>
         <div class="card">
           <i class="fa-solid fa-basketball icon"></i>
           <h3>Basketball Court</h3>
-          <p>Standard hoop court setup for casual games and tournaments.</p>
+          <p>Well-paved basketball hoop setup ready for pick-up games and shooting practice.</p>
         </div>
         <div class="card">
           <i class="fa-solid fa-child-reaching icon"></i>
-          <h3>Bouncing Castle & Kids Area</h3>
-          <p>Safe and energetic play zone featuring bouncing castles to keep the children entertained.</p>
+          <h3>Bouncing Castle & Kids Fun</h3>
+          <p>Safe, supervised bouncing castle and play zones for kids during weekend family outings.</p>
         </div>
       </div>
     </div>
@@ -130,76 +140,147 @@
   <section id="restaurant" class="section menu-section">
     <div class="container">
       <h2><i class="fa-solid fa-utensils"></i> Restaurant Menu</h2>
-      <p class="subtitle">Select a main dish to customize your meal and accompaniments</p>
+      <p class="subtitle">Choose a meal to customize preparation styles and accompaniments</p>
 
-      <!-- Sticky Filter Bar -->
+      <!-- Category Filter Pills -->
       <div class="menu-tabs">
-        <button class="tab-btn active" onclick="filterMenu('all')">All</button>
-        <button class="tab-btn" onclick="filterMenu('breakfast')">Breakfast & Snacks</button>
-        <button class="tab-btn" onclick="filterMenu('chicken')">Chicken</button>
-        <button class="tab-btn" onclick="filterMenu('fish')">Fish</button>
-        <button class="tab-btn" onclick="filterMenu('goat')">Goat</button>
-        <button class="tab-btn" onclick="filterMenu('liver')">Liver</button>
-        <button class="tab-btn" onclick="filterMenu('burgers-pizza')">Burgers & Pizzas</button>
+        <button class="tab-btn active" onclick="filterCategory('all', this)">All Items</button>
+        <button class="tab-btn" onclick="filterCategory('chicken', this)">Chicken</button>
+        <button class="tab-btn" onclick="filterCategory('fish', this)">Fish</button>
+        <button class="tab-btn" onclick="filterCategory('goat', this)">Goat</button>
+        <button class="tab-btn" onclick="filterCategory('liver', this)">Liver</button>
+        <button class="tab-btn" onclick="filterCategory('burgers-pizza', this)">Burgers & Pizzas</button>
+        <button class="tab-btn" onclick="filterCategory('breakfast', this)">Snacks & Breakfast</button>
       </div>
 
-      <!-- Food Items Grid -->
+      <!-- Menu Grid -->
       <div class="menu-grid" id="menu-grid">
-        <!-- JS will dynamically populate items -->
+        <!-- Rendered dynamically via JavaScript -->
       </div>
     </div>
   </section>
 
-  <!-- MODAL FOR ORDER CUSTOMIZATION -->
-  <div id="item-modal" class="modal">
+  <!-- CUSTOMIZATION MODAL -->
+  <div id="customize-modal" class="modal">
     <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <h3 id="modal-title">Item Name</h3>
-      <p id="modal-price" class="modal-price"></p>
+      <span class="close-btn" onclick="closeModal('customize-modal')">&times;</span>
+      <h3 id="modal-item-name">Food Item Name</h3>
+      <p id="modal-item-price" class="modal-price-tag">0 UGX</p>
       
       <div class="modal-body">
-        <h4>1. Choose Preparation / Style:</h4>
-        <div id="modal-prep-options" class="option-group"></div>
+        <div class="form-group" id="prep-group">
+          <label><strong>1. Choose Preparation Style:</strong></label>
+          <div id="prep-options-container" class="options-stack"></div>
+        </div>
 
-        <h4>2. Choose Accompaniment:</h4>
-        <div id="modal-sides-options" class="option-group"></div>
+        <div class="form-group" id="side-group">
+          <label><strong>2. Choose Accompaniment / Side:</strong></label>
+          <div id="side-options-container" class="options-stack"></div>
+        </div>
 
-        <h4>3. Special Instructions:</h4>
-        <textarea id="modal-notes" placeholder="e.g., No cooking oil added, extra sauce, crispiness level..."></textarea>
+        <div class="form-group">
+          <label><strong>3. Special Requests or Cooking Notes:</strong></label>
+          <textarea id="item-special-notes" rows="3" placeholder="e.g., No cooking oil added, extra chili on the side, well-done roast..."></textarea>
+        </div>
       </div>
 
-      <button class="btn-primary full-width" onclick="addToOrder()">Add to Order</button>
+      <button class="btn-primary full-width-btn" onclick="confirmAddToCart()">
+        <i class="fa-solid fa-plus"></i> Add Selection to Cart
+      </button>
     </div>
   </div>
 
-  <!-- CONTACT / BOOKINGS -->
-  <section id="contact" class="section dark-bg">
-    <div class="container">
-      <h2>Bookings & Enquiries</h2>
-      <p class="subtitle">Get in touch to reserve tables, venues, or swimming lessons</p>
-      <form class="contact-form">
-        <div class="form-group">
-          <input type="text" placeholder="Your Name" required>
-          <input type="tel" placeholder="Phone Number" required>
-        </div>
-        <div class="form-group">
-          <select required>
-            <option value="">Select Service / Inquiry</option>
-            <option value="swimming">Swimming Lessons</option>
-            <option value="pool-party">Pool Party Reservation</option>
-            <option value="event">Wedding / Party Venue Booking</option>
-            <option value="restaurant">Restaurant Table Reservation</option>
-          </select>
-        </div>
-        <textarea placeholder="Tell us more about your event date or requirements..." rows="4"></textarea>
-        <button type="submit" class="btn-primary">Submit Inquiry</button>
-      </form>
+  <!-- CART DRAWER -->
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3><i class="fa-solid fa-cart-shopping"></i> Your Food & Drinks Order</h3>
+      <span class="close-btn" onclick="toggleCartDrawer()">&times;</span>
     </div>
-  </section>
+    
+    <div class="cart-items-body" id="cart-items-list">
+      <!-- Items dynamically populated -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-summary-line">
+        <span>Total Amount:</span>
+        <strong id="cart-total-price">0 UGX</strong>
+      </div>
+      
+      <div class="customer-inputs">
+        <input type="text" id="cust-name" placeholder="Your Name" required>
+        <input type="tel" id="cust-phone" placeholder="Phone Number" required>
+        <input type="text" id="cust-location" placeholder="Table Number / Delivery Location">
+      </div>
+
+      <button class="whatsapp-btn" onclick="checkoutToWhatsApp()">
+        <i class="fa-brands fa-whatsapp"></i> Send Order to WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- ADMIN LOGIN & CONTROL MODAL -->
+  <div id="admin-modal" class="modal">
+    <div class="modal-content admin-modal-width">
+      <span class="close-btn" onclick="closeModal('admin-modal')">&times;</span>
+      
+      <!-- Login Form View -->
+      <div id="admin-login-view">
+        <h3><i class="fa-solid fa-user-lock"></i> Kiteezi Admin Portal</h3>
+        <p class="subtitle">Default passcode: <strong>kiteezi2026</strong></p>
+        <form onsubmit="handleAdminLogin(event)">
+          <div class="form-group">
+            <input type="password" id="admin-pass-input" placeholder="Enter Admin Password" class="full-input" required>
+          </div>
+          <button type="submit" class="btn-primary full-width-btn">Unlock Admin Dashboard</button>
+        </form>
+      </div>
+
+      <!-- Dashboard View -->
+      <div id="admin-dashboard-view" style="display: none;">
+        <h3>Admin Management Portal</h3>
+        
+        <div class="admin-form-box">
+          <h4>Add / Edit Restaurant Item</h4>
+          <form id="add-menu-form" onsubmit="handleSaveMenuItem(event)">
+            <input type="text" id="menu-title-input" placeholder="Item Name (e.g., Whole Nile Perch)" required>
+            
+            <div class="two-col-inputs">
+              <input type="number" id="menu-price-input" placeholder="Price in UGX" required>
+              <select id="menu-category-input" required>
+                <option value="chicken">Chicken</option>
+                <option value="fish">Fish</option>
+                <option value="goat">Goat</option>
+                <option value="liver">Liver</option>
+                <option value="burgers-pizza">Burgers & Pizzas</option>
+                <option value="breakfast">Breakfast & Snacks</option>
+              </select>
+            </div>
+
+            <input type="text" id="menu-img-input" placeholder="Image URL (Leave empty for clean background photo)">
+
+            <div class="checkbox-row">
+              <label><input type="checkbox" id="menu-sides-check" checked> Requires Side Selection</label>
+              <label><input type="checkbox" id="menu-avail-check" checked> In Stock</label>
+            </div>
+
+            <button type="submit" class="btn-primary full-width-btn">Save Menu Item</button>
+          </form>
+        </div>
+
+        <div class="admin-items-list-container">
+          <h4>Current Live Menu Items</h4>
+          <div id="admin-menu-render-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <footer>
-    <p>&copy; 2026 Kiteezi Recreational Center. All Rights Reserved.</p>
+    <div class="container">
+      <p>&copy; 2026 Kiteezi Recreational Center. All Rights Reserved.</p>
+    </div>
   </footer>
 
   <script src="script.js"></script>
