@@ -1,160 +1,816 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kiteezi Recreational Center | Swimming, Events, Buffet & Sports Bar</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Kiteezi Recreational Center — swimming, sports, restaurant, events and relaxation in Kiteezi, Uganda."
+    >
+
+    <title>
+        Kiteezi Recreational Center
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
+
 <body>
 
-  <!-- LIVE DYNAMIC ANNOUNCEMENT BAR FROM SUPABASE -->
-  <div id="live-announcement-bar" class="announcement-bar">
-    <i class="fa-solid fa-water-ladder"></i> Loading latest venue updates...
-  </div>
+    <!-- =========================
+         HEADER / NAVIGATION
+    ========================== -->
 
-  <!-- NAVIGATION BAR -->
-  <header class="navbar">
-    <div class="logo">Kiteezi <span>Recreational Center</span></div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="#swimming">Swimming</a>
-      <a href="#buffet">Buffet & Catering</a>
-      <a href="#events">Events & Weddings</a>
-      <a href="#bar">Sports Bar</a>
-      <a href="#games">Games Zone</a>
-      <a href="menu.html" class="nav-highlight">Food & Drinks Menu</a>
-    </nav>
-    <div class="header-actions">
-      <a href="menu.html" class="btn-primary-sm">
-        <i class="fa-solid fa-utensils"></i> Order Online
-      </a>
+    <header class="site-header">
+
+        <div class="nav-container">
+
+            <a
+                href="index.html"
+                class="logo-link"
+            >
+                <img
+                    src="images/LOGO.png"
+                    alt="Kiteezi Recreational Center Logo"
+                    class="logo"
+                >
+            </a>
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                aria-label="Open navigation menu"
+                type="button"
+            >
+                ☰
+            </button>
+
+            <nav
+                class="main-nav"
+                id="mainNav"
+            >
+
+                <a
+                    href="index.html"
+                    class="active"
+                >
+                    Home
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+                <a href="#facilities">
+                    Facilities
+                </a>
+
+                <a href="menu.html">
+                    Menu
+                </a>
+
+                <a href="personel.html">
+                    Personnel
+                </a>
+
+                <a href="#reviews">
+                    Reviews
+                </a>
+
+                <a href="#contact">
+                    Contact
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         HERO SECTION
+    ========================== -->
+
+    <main>
+
+        <section
+            class="hero-section"
+            id="home"
+        >
+
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+
+                <p class="hero-subtitle">
+                    WELCOME TO
+                </p>
+
+                <h1>
+                    Kiteezi Recreational Center
+                </h1>
+
+                <p>
+                    Relax. Play. Swim. Eat. Celebrate.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a
+                        href="menu.html"
+                        class="btn btn-primary"
+                    >
+                        Explore Our Menu
+                    </a>
+
+                    <a
+                        href="#facilities"
+                        class="btn btn-secondary"
+                    >
+                        Explore Facilities
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ABOUT
+        ========================== -->
+
+        <section
+            class="about-section"
+            id="about"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <span>
+                        ABOUT US
+                    </span>
+
+                    <h2>
+                        A Place to Relax & Enjoy
+                    </h2>
+
+                </div>
+
+                <div class="about-content">
+
+                    <div class="about-text">
+
+                        <p>
+                            Kiteezi Recreational Center is a destination
+                            for relaxation, recreation, great food and
+                            memorable experiences.
+                        </p>
+
+                        <p>
+                            Whether you want to take a swim, enjoy sports,
+                            have a meal with friends and family, or simply
+                            relax in a comfortable environment, we have
+                            something for you.
+                        </p>
+
+                        <p>
+                            We are located in Kiteezi, opposite Shell
+                            Kiteezi, Uganda.
+                        </p>
+
+                        <a
+                            href="personel.html"
+                            class="btn btn-primary"
+                        >
+                            Meet Our Personnel
+                        </a>
+
+                    </div>
+
+                    <div class="about-media">
+
+                        <div
+                            class="media-gallery"
+                            data-media-area="about"
+                        >
+                            <!-- Images are loaded automatically by script.js -->
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FACILITIES
+        ========================== -->
+
+        <section
+            class="facilities-section"
+            id="facilities"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <span>
+                        WHAT WE OFFER
+                    </span>
+
+                    <h2>
+                        Our Facilities
+                    </h2>
+
+                    <p>
+                        Everything you need for fun, relaxation and
+                        unforgettable moments.
+                    </p>
+
+                </div>
+
+
+                <div class="facilities-grid">
+
+                    <!-- Swimming -->
+
+                    <article class="facility-card">
+
+                        <div
+                            class="facility-media"
+                            data-media-area="swimming"
+                        >
+                        </div>
+
+                        <div class="facility-content">
+
+                            <h3>
+                                Swimming
+                            </h3>
+
+                            <p>
+                                Take a refreshing swim and enjoy time
+                                in our swimming area.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Sports -->
+
+                    <article class="facility-card">
+
+                        <div
+                            class="facility-media"
+                            data-media-area="sports"
+                        >
+                        </div>
+
+                        <div class="facility-content">
+
+                            <h3>
+                                Sports & Play
+                            </h3>
+
+                            <p>
+                                Enjoy games, sports and activities
+                                with friends and family.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Restaurant -->
+
+                    <article class="facility-card">
+
+                        <div
+                            class="facility-media"
+                            data-media-area="restaurant"
+                        >
+                        </div>
+
+                        <div class="facility-content">
+
+                            <h3>
+                                Restaurant
+                            </h3>
+
+                            <p>
+                                Enjoy delicious meals and refreshments
+                                prepared for our guests.
+                            </p>
+
+                            <a
+                                href="menu.html"
+                                class="text-link"
+                            >
+                                View Menu →
+                            </a>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Events -->
+
+                    <article class="facility-card">
+
+                        <div
+                            class="facility-media"
+                            data-media-area="events"
+                        >
+                        </div>
+
+                        <div class="facility-content">
+
+                            <h3>
+                                Events
+                            </h3>
+
+                            <p>
+                                A great space for celebrations, gatherings,
+                                parties and special occasions.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PERSONNEL PREVIEW
+        ========================== -->
+
+        <section class="personnel-preview">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <span>
+                        OUR TEAM
+                    </span>
+
+                    <h2>
+                        Meet Our Personnel
+                    </h2>
+
+                    <p>
+                        Meet the people who help make Kiteezi Recreational
+                        Center a welcoming place for our guests.
+                    </p>
+
+                </div>
+
+                <div class="personnel-preview-content">
+
+                    <a
+                        href="personel.html"
+                        class="btn btn-primary"
+                    >
+                        Meet Our Team
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             MENU CTA
+        ========================== -->
+
+        <section class="menu-cta">
+
+            <div class="menu-cta-overlay"></div>
+
+            <div class="section-container">
+
+                <div class="menu-cta-content">
+
+                    <span>
+                        GOOD FOOD • GREAT MOMENTS
+                    </span>
+
+                    <h2>
+                        Hungry?
+                    </h2>
+
+                    <p>
+                        Explore our menu and discover something
+                        delicious for everyone.
+                    </p>
+
+                    <a
+                        href="menu.html"
+                        class="btn btn-primary"
+                    >
+                        View Our Menu
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             REVIEWS
+        ========================== -->
+
+        <section
+            class="reviews-section"
+            id="reviews"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <span>
+                        GUEST EXPERIENCES
+                    </span>
+
+                    <h2>
+                        What Our Guests Say
+                    </h2>
+
+                </div>
+
+
+                <div
+                    class="reviews-grid"
+                    id="reviewsContainer"
+                >
+
+                    <!-- Reviews are loaded automatically from Supabase -->
+
+                    <div class="loading-message">
+                        Loading reviews...
+                    </div>
+
+                </div>
+
+
+                <div class="review-form-container">
+
+                    <h3>
+                        Share Your Experience
+                    </h3>
+
+                    <form id="reviewForm">
+
+                        <div class="form-group">
+
+                            <label for="reviewName">
+                                Your Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="reviewName"
+                                name="name"
+                                placeholder="Enter your name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="reviewMessage">
+                                Your Review
+                            </label>
+
+                            <textarea
+                                id="reviewMessage"
+                                name="message"
+                                rows="5"
+                                placeholder="Tell us about your experience..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Submit Review
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CONTACT
+        ========================== -->
+
+        <section
+            class="contact-section"
+            id="contact"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <span>
+                        GET IN TOUCH
+                    </span>
+
+                    <h2>
+                        Contact Kiteezi Recreational Center
+                    </h2>
+
+                </div>
+
+
+                <div class="contact-grid">
+
+                    <div class="contact-card">
+
+                        <div class="contact-icon">
+                            📍
+                        </div>
+
+                        <h3>
+                            Location
+                        </h3>
+
+                        <p>
+                            Kiteezi, opposite Shell Kiteezi,
+                            Uganda
+                        </p>
+
+                    </div>
+
+
+                    <div class="contact-card">
+
+                        <div class="contact-icon">
+                            🕐
+                        </div>
+
+                        <h3>
+                            Opening Hours
+                        </h3>
+
+                        <p>
+                            Every Day
+                        </p>
+
+                        <strong>
+                            10:00 AM – 10:00 PM
+                        </strong>
+
+                    </div>
+
+
+                    <div class="contact-card">
+
+                        <div class="contact-icon">
+                            🍽️
+                        </div>
+
+                        <h3>
+                            Restaurant
+                        </h3>
+
+                        <p>
+                            Fresh meals, snacks and refreshments
+                            available for our guests.
+                        </p>
+
+                        <a
+                            href="menu.html"
+                            class="text-link"
+                        >
+                            View Menu →
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WhatsApp -->
+
+                <div class="contact-action">
+
+                    <a
+                        href="https://wa.me/"
+                        class="whatsapp-button"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        💬 Contact Us on WhatsApp
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="site-footer">
+
+        <div class="footer-container">
+
+            <div class="footer-brand">
+
+                <img
+                    src="images/LOGO.png"
+                    alt="Kiteezi Recreational Center"
+                >
+
+                <p>
+                    Relax. Play. Swim. Eat. Celebrate.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <h3>
+                    Quick Links
+                </h3>
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+                <a href="#facilities">
+                    Facilities
+                </a>
+
+                <a href="menu.html">
+                    Menu
+                </a>
+
+                <a href="personel.html">
+                    Personnel
+                </a>
+
+                <a href="#reviews">
+                    Reviews
+                </a>
+
+                <a href="#contact">
+                    Contact
+                </a>
+
+            </div>
+
+
+            <div class="footer-contact">
+
+                <h3>
+                    Visit Us
+                </h3>
+
+                <p>
+                    Kiteezi, opposite Shell Kiteezi
+                </p>
+
+                <p>
+                    10:00 AM – 10:00 PM
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                ©
+                <span id="year"></span>
+                Kiteezi Recreational Center.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================
+         LIGHTBOX
+    ========================== -->
+
+    <div
+        class="lightbox"
+        id="lightbox"
+        aria-hidden="true"
+    >
+
+        <button
+            class="lightbox-close"
+            id="lightboxClose"
+            type="button"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+        <div
+            class="lightbox-content"
+            id="lightboxContent"
+        >
+        </div>
+
     </div>
-  </header>
 
-  <!-- HERO SECTION -->
-  <section id="hero" class="hero">
-    <div class="hero-overlay">
-      <h1>Welcome to Kiteezi Recreational Center</h1>
-      <p>Your premier destination for swimming, dining, sports screenings, weddings, and family fun.</p>
-      <div class="hero-buttons">
-        <a href="menu.html" class="btn-primary"><i class="fa-solid fa-utensils"></i> View Menu & Order</a>
-        <a href="#buffet" class="btn-secondary"><i class="fa-solid fa-bowl-food"></i> Buffet Packages</a>
-      </div>
-    </div>
-  </section>
 
-  <!-- SWIMMING POOL SECTION -->
-  <section id="swimming" class="section dark-bg">
-    <div class="container">
-      <h2><i class="fa-solid fa-water-ladder"></i> Swimming Pool & Lessons</h2>
-      <p class="subtitle">Clean, safe, and exciting pool facilities for kids and adults</p>
-      <div class="cards-grid">
-        <div class="card">
-          <i class="fa-solid fa-person-swimming icon"></i>
-          <h3>Daily Swimming</h3>
-          <p>Enjoy relaxed leisure swimming in our standard hygienic pool with dedicated lifeguards on duty.</p>
-        </div>
-        <div class="card highlight">
-          <i class="fa-solid fa-champagne-glasses icon"></i>
-          <h3>Monthly Pool Party</h3>
-          <p>Held <strong>Every Last Saturday of the Month</strong>! Featuring top DJs, poolside cocktails, sizzling meat, and group games.</p>
-        </div>
-        <div class="card">
-          <i class="fa-solid fa-graduation-cap icon"></i>
-          <h3>Professional Lessons</h3>
-          <p>Certified instructors offering beginner to advanced swimming courses for both children and adults.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
 
-  <!-- BUFFET & CATERING PACKAGES SECTION (SUPABASE FETCH) -->
-  <section id="buffet" class="section">
-    <div class="container">
-      <h2><i class="fa-solid fa-bowl-food"></i> Event & Party Buffet Packages</h2>
-      <p class="subtitle">Customizable buffet menus tailored for weddings, birthdays, and corporate events</p>
-      
-      <!-- Populated live via Supabase in script.js -->
-      <div class="cards-grid" id="buffet-packages-grid">
-        <p>Loading party and buffet packages...</p>
-      </div>
-    </div>
-  </section>
+    <script
+        src="script.js"
+    ></script>
 
-  <!-- EVENTS & WEDDINGS SECTION -->
-  <section id="events" class="section dark-bg">
-    <div class="container">
-      <h2><i class="fa-solid fa-holly-berry"></i> Events, Weddings & Receptions</h2>
-      <p class="subtitle">Spacious lawns and event spaces designed for all life’s big celebrations</p>
-      <div class="cards-grid">
-        <div class="card">
-          <i class="fa-solid fa-ring icon"></i>
-          <h3>Weddings & Receptions</h3>
-          <p>Scenic outdoor grounds capable of hosting large guest capacity with flexible catering setups.</p>
-        </div>
-        <div class="card">
-          <i class="fa-solid fa-cake-candles icon"></i>
-          <h3>Birthday Celebrations</h3>
-          <p>Private birthday spaces with tailored decoration packages and customized food menus.</p>
-        </div>
-        <div class="card">
-          <i class="fa-solid fa-users icon"></i>
-          <h3>Corporate Gatherings</h3>
-          <p>Team building exercises, end-of-year parties, and corporate luncheons in a pleasant environment.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SPORTS BAR SECTION -->
-  <section id="bar" class="section">
-    <div class="container">
-      <h2><i class="fa-solid fa-tv"></i> Sports Bar & Lounge</h2>
-      <p class="subtitle">Catch every match live on big screens with cold drinks & crisp audio</p>
-      <div class="bar-info-box">
-        <p><i class="fa-solid fa-check-circle"></i> Showing Premier League, Champions League, La Liga, & International Sports</p>
-        <p><i class="fa-solid fa-check-circle"></i> Fully stocked bar: Beers, Spirits, Wine, Fresh Juices, and Smoothies</p>
-        <p><i class="fa-solid fa-check-circle"></i> Poolside lounge seating and delicious bar bites served straight to your table</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- GAMES & KIDS ZONE SECTION -->
-  <section id="games" class="section dark-bg">
-    <div class="container">
-      <h2><i class="fa-solid fa-gamepad"></i> Games & Recreation Area</h2>
-      <p class="subtitle">Active fun for sports lovers and young children</p>
-      <div class="cards-grid">
-        <div class="card">
-          <i class="fa-solid fa-futbol icon"></i>
-          <h3>Football Field</h3>
-          <p>Open grassy pitch ideal for friendly kickabouts, tournaments, and recreational sports.</p>
-        </div>
-        <div class="card">
-          <i class="fa-solid fa-basketball icon"></i>
-          <h3>Basketball Court</h3>
-          <p>Well-paved basketball hoop setup ready for pick-up games and shooting practice.</p>
-        </div>
-        <div class="card">
-          <i class="fa-solid fa-child-reaching icon"></i>
-          <h3>Bouncing Castle & Kids Fun</h3>
-          <p>Safe, supervised bouncing castle and play zones for kids during weekend family outings.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2026 Kiteezi Recreational Center. All Rights Reserved.</p>
-    </div>
-  </footer>
-
-  <!-- SUPABASE JS SDK & MAIN APPLICATION SCRIPT -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js"></script>
 </body>
+
 </html>
+```
+
+**One important thing:** I left the WhatsApp link as `https://wa.me/` because I don't want to accidentally put the old number back into your site. Replace that with the **new WhatsApp number you previously chose**.
+
+Also, this `index.html` expects these files/pages to exist:
+
+```text
+Kiteezi website/
+│
+├── index.html
+├── menu.html
+├── personel.html
+├── style.css
+├── personel.css
+├── script.js
+│
+├── admin.html
+├── admin.css
+├── admin.js
+│
+└── images/
+    └── LOGO.png
+```
+
+If you want, I can also give you the **complete `personel.html + personel.css + script.js` together**, so the new Personnel page is fully connected to your Supabase `website_images` setup rather than just being a page with static content.
