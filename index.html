@@ -5,77 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Kiteezi Recreational Center — swimming, sports, restaurant, events and relaxation in Kiteezi, Uganda.">
   <title>Kiteezi Recreational Center</title>
-  
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- ANNOUNCEMENT BANNER -->
-  <div id="announcement-banner" class="announcement-banner" style="display: none;">
-    <div class="container banner-flex">
+  <div id="announcement-banner" class="announcement-bar" style="display: none;">
+    <div class="banner-flex">
       <span id="announcement-text"><i class="fa-solid fa-bullhorn"></i> Welcome to Kiteezi Recreational Center!</span>
-      <button class="close-banner-btn" onclick="closeBanner()">&times;</button>
+      <button class="close-banner-btn" onclick="closeBanner()" aria-label="Close banner">&times;</button>
     </div>
   </div>
 
-  <!-- NAVIGATION -->
-  <header class="site-header">
-    <div class="nav-container">
-      <a href="index.html" class="logo-link">
-        <img src="images/LOGO.png" alt="Kiteezi Recreational Center Logo" class="logo">
-      </a>
+  <!-- HEADER / NAVIGATION -->
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <img src="images/LOGO.png" alt="Kiteezi Recreational Center Logo" class="logo-img">
+    </a>
 
-      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" type="button">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" type="button">
+      <i class="fa-solid fa-bars"></i>
+    </button>
 
-      <nav class="main-nav" id="mainNav">
-        <a href="index.html" class="active">Home</a>
-        <a href="#about">About</a>
-        <a href="#facilities">Facilities</a>
-        <a href="menu.html">Menu</a>
-        <a href="personel.html">Personnel</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#contact">Contact</a>
-      </nav>
+    <nav class="nav-links" id="mainNav">
+      <a href="index.html" class="active">Home</a>
+      <a href="#about">About</a>
+      <a href="#facilities">Facilities</a>
+      <a href="menu.html">Menu</a>
+      <a href="personel.html">Personnel</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="menu.html" class="btn-primary-sm">Order Online</a>
     </div>
   </header>
 
   <main>
     <!-- HERO SECTION -->
-    <section class="hero-section" id="home">
-      <div class="hero-overlay"></div>
+    <section class="hero" id="home">
       <div class="hero-content">
-        <p class="hero-subtitle">WELCOME TO</p>
+        <p class="subtitle" style="color: #ffffff; text-transform: uppercase; letter-spacing: 2px;">WELCOME TO</p>
         <h1>Kiteezi Recreational Center</h1>
         <p>Relax. Play. Swim. Eat. Celebrate.</p>
         <div class="hero-buttons">
-          <a href="menu.html" class="btn btn-primary">Explore Our Menu</a>
-          <a href="#facilities" class="btn btn-secondary">Explore Facilities</a>
+          <a href="menu.html" class="btn-primary">Explore Our Menu</a>
+          <a href="#facilities" class="btn-secondary">Explore Facilities</a>
         </div>
       </div>
     </section>
 
     <!-- ABOUT SECTION -->
-    <section class="about-section" id="about">
+    <section class="section" id="about">
       <div class="section-container">
         <div class="section-heading">
-          <span>ABOUT US</span>
-          <h2>A Place to Relax & Enjoy</h2>
+          <span class="subtitle">ABOUT US</span>
+          <h2>A Place to Relax &amp; Enjoy</h2>
         </div>
 
-        <div class="about-content">
-          <div class="about-text">
-            <p>Kiteezi Recreational Center is a destination for relaxation, recreation, great food and memorable experiences.</p>
-            <p>Whether you want to take a swim, enjoy sports, have a meal with friends and family, or simply relax in a comfortable environment, we have something for you.</p>
-            <p>We are located in Kiteezi, opposite Shell Kiteezi, Uganda.</p>
-            <a href="personel.html" class="btn btn-primary">Meet Our Personnel</a>
+        <div class="about-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: center; margin-top: 2rem;">
+          <div class="about-text" style="text-align: left;">
+            <p style="margin-bottom: 1rem;">Kiteezi Recreational Center is a destination for relaxation, recreation, great food and memorable experiences.</p>
+            <p style="margin-bottom: 1rem;">Whether you want to take a swim, enjoy sports, have a meal with friends and family, or simply relax in a comfortable environment, we have something for you.</p>
+            <p style="margin-bottom: 1.5rem;">We are located in Kiteezi, opposite Shell Kiteezi, Uganda.</p>
+            <a href="personel.html" class="btn-primary">Meet Our Personnel</a>
           </div>
 
           <div class="about-media">
             <div class="media-gallery" data-media-area="about">
-              <!-- Images loaded dynamically -->
+              <!-- Dynamically populated via script.js -->
             </div>
           </div>
         </div>
@@ -83,104 +85,91 @@
     </section>
 
     <!-- FACILITIES SECTION -->
-    <section class="facilities-section" id="facilities">
+    <section class="section dark-bg" id="facilities">
       <div class="section-container">
         <div class="section-heading">
-          <span>WHAT WE OFFER</span>
+          <span class="subtitle" style="color: var(--primary-red);">WHAT WE OFFER</span>
           <h2>Our Facilities</h2>
-          <p>Everything you need for fun, relaxation and unforgettable moments.</p>
+          <p style="color: var(--text-muted); margin-bottom: 2rem;">Everything you need for fun, relaxation and unforgettable moments.</p>
         </div>
 
-        <div class="facilities-grid">
+        <div class="cards-grid">
           <!-- Swimming -->
-          <article class="facility-card">
+          <article class="card">
             <div class="facility-media" data-media-area="swimming"></div>
-            <div class="facility-content">
-              <h3>Swimming</h3>
-              <p>Take a refreshing swim and enjoy time in our swimming area.</p>
-            </div>
+            <div class="icon"><i class="fa-solid fa-water-ladder"></i></div>
+            <h3>Swimming</h3>
+            <p>Take a refreshing swim and enjoy time in our swimming area.</p>
           </article>
 
           <!-- Sports -->
-          <article class="facility-card">
+          <article class="card">
             <div class="facility-media" data-media-area="sports"></div>
-            <div class="facility-content">
-              <h3>Sports & Play</h3>
-              <p>Enjoy games, sports and activities with friends and family.</p>
-            </div>
+            <div class="icon"><i class="fa-solid fa-volleyball"></i></div>
+            <h3>Sports &amp; Play</h3>
+            <p>Enjoy games, sports and activities with friends and family.</p>
           </article>
 
           <!-- Restaurant -->
-          <article class="facility-card">
+          <article class="card highlight">
             <div class="facility-media" data-media-area="restaurant"></div>
-            <div class="facility-content">
-              <h3>Restaurant</h3>
-              <p>Enjoy delicious meals and refreshments prepared for our guests.</p>
-              <a href="menu.html" class="text-link">View Menu &rarr;</a>
-            </div>
+            <div class="icon"><i class="fa-solid fa-utensils"></i></div>
+            <h3>Restaurant</h3>
+            <p>Enjoy delicious meals and refreshments prepared for our guests.</p>
+            <a href="menu.html" style="color: var(--primary-red); font-weight: bold; text-decoration: none; display: inline-block; margin-top: 0.5rem;">View Menu &rarr;</a>
           </article>
 
           <!-- Events -->
-          <article class="facility-card">
+          <article class="card">
             <div class="facility-media" data-media-area="events"></div>
-            <div class="facility-content">
-              <h3>Events</h3>
-              <p>A great space for celebrations, gatherings, parties and special occasions.</p>
-            </div>
+            <div class="icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+            <h3>Events</h3>
+            <p>A great space for celebrations, gatherings, parties and special occasions.</p>
           </article>
         </div>
       </div>
     </section>
 
     <!-- PERSONNEL PREVIEW -->
-    <section class="personnel-preview">
+    <section class="section">
       <div class="section-container">
-        <div class="section-heading">
-          <span>OUR TEAM</span>
-          <h2>Meet Our Personnel</h2>
-          <p>Meet the people who help make Kiteezi Recreational Center a welcoming place for our guests.</p>
-        </div>
-        <div class="personnel-preview-content">
-          <a href="personel.html" class="btn btn-primary">Meet Our Team</a>
-        </div>
+        <span class="subtitle">OUR TEAM</span>
+        <h2>Meet Our Personnel</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Meet the people who help make Kiteezi Recreational Center a welcoming place for our guests.</p>
+        <a href="personel.html" class="btn-primary">Meet Our Team</a>
       </div>
     </section>
 
     <!-- MENU CTA -->
-    <section class="menu-cta">
-      <div class="menu-cta-overlay"></div>
+    <section class="section dark-bg" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('images/LOGO.png') center/cover;">
       <div class="section-container">
-        <div class="menu-cta-content">
-          <span>GOOD FOOD • GREAT MOMENTS</span>
-          <h2>Hungry?</h2>
-          <p>Explore our menu and discover something delicious for everyone.</p>
-          <a href="menu.html" class="btn btn-primary">View Our Menu</a>
-        </div>
+        <span class="subtitle" style="color: var(--primary-red);">GOOD FOOD • GREAT MOMENTS</span>
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Hungry?</h2>
+        <p style="color: #cbd5e1; margin-bottom: 1.5rem;">Explore our menu and discover something delicious for everyone.</p>
+        <a href="menu.html" class="btn-primary">View Our Menu</a>
       </div>
     </section>
 
     <!-- REVIEWS SECTION -->
-    <section class="reviews-section" id="reviews">
+    <section class="section" id="reviews">
       <div class="section-container">
-        <div class="section-heading">
-          <span>GUEST EXPERIENCES</span>
-          <h2>What Our Guests Say</h2>
+        <span class="subtitle">GUEST EXPERIENCES</span>
+        <h2>What Our Guests Say</h2>
+
+        <div class="cards-grid" id="reviewsContainer" style="margin-top: 2rem; margin-bottom: 3rem;">
+          <div class="loading-message" style="grid-column: 1/-1; color: var(--text-muted);">Loading reviews...</div>
         </div>
 
-        <div class="reviews-grid" id="reviewsContainer">
-          <div class="loading-message">Loading reviews...</div>
-        </div>
-
-        <div class="review-form-container">
-          <h3>Share Your Experience</h3>
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+          <h3 style="margin-bottom: 1rem;">Share Your Experience</h3>
           <form id="reviewForm">
-            <div class="form-group">
-              <label for="reviewName">Your Name</label>
+            <div style="margin-bottom: 1rem; text-align: left;">
+              <label for="reviewName" style="font-weight: 600;">Your Name</label>
               <input type="text" id="reviewName" name="name" placeholder="Enter your name" required>
             </div>
 
-            <div class="form-group">
-              <label for="reviewRating">Rating</label>
+            <div style="margin-bottom: 1rem; text-align: left;">
+              <label for="reviewRating" style="font-weight: 600;">Rating</label>
               <select id="reviewRating" name="rating" required>
                 <option value="">Select rating</option>
                 <option value="5">★★★★★ - Excellent</option>
@@ -191,121 +180,123 @@
               </select>
             </div>
 
-            <div class="form-group">
-              <label for="reviewMessage">Your Review</label>
-              <textarea id="reviewMessage" name="message" rows="5" placeholder="Tell us about your experience..." required></textarea>
+            <div style="margin-bottom: 1rem; text-align: left;">
+              <label for="reviewMessage" style="font-weight: 600;">Your Review</label>
+              <textarea id="reviewMessage" name="message" rows="4" placeholder="Tell us about your experience..." required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit Review</button>
-            <p id="reviewStatus" class="form-status"></p>
+            <button type="submit" class="btn-primary full-width-btn">Submit Review</button>
+            <p id="reviewStatus" style="margin-top: 0.8rem; font-size: 0.9rem; font-weight: bold;"></p>
           </form>
         </div>
       </div>
     </section>
 
     <!-- CONTACT SECTION -->
-    <section class="contact-section" id="contact">
+    <section class="section dark-bg" id="contact">
       <div class="section-container">
-        <div class="section-heading">
-          <span>GET IN TOUCH</span>
-          <h2>Contact Kiteezi Recreational Center</h2>
-        </div>
+        <span class="subtitle" style="color: var(--primary-red);">GET IN TOUCH</span>
+        <h2 style="margin-bottom: 2rem;">Contact Kiteezi Recreational Center</h2>
 
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+        <div class="cards-grid">
+          <div class="card" style="background: #1e293b; color: white;">
+            <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
             <h3>Location</h3>
-            <p>
-              <a href="https://www.google.com/maps/place/kiteezi+recreation+center/data=!4m2!3m1!1s0x177db11709cac499:0x30f8c01c7912656a?sa=X&ved=1t:242&ictx=111" target="_blank" rel="noopener noreferrer">
+            <p style="margin-top: 0.5rem;">
+              <a href="https://www.google.com/maps/place/kiteezi+recreation+center/data=!4m2!3m1!1s0x177db11709cac499:0x30f8c01c7912656a?sa=X&amp;ved=1t:242&amp;ictx=111" target="_blank" rel="noopener noreferrer" style="color: #cbd5e1; text-decoration: none;">
                 Kiteezi, opposite Shell Kiteezi, Uganda
               </a>
             </p>
           </div>
 
-          <div class="contact-card">
-            <div class="contact-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="card" style="background: #1e293b; color: white;">
+            <div class="icon"><i class="fa-solid fa-clock"></i></div>
             <h3>Opening Hours</h3>
-            <p>Every Day</p>
-            <strong>10:00 AM – 10:00 PM</strong>
+            <p style="color: #cbd5e1; margin-top: 0.5rem;">Every Day</p>
+            <strong style="color: var(--primary-red); display: block; margin-top: 0.2rem;">10:00 AM – 10:00 PM</strong>
           </div>
 
-          <div class="contact-card">
-            <div class="contact-icon"><i class="fa-solid fa-utensils"></i></div>
+          <div class="card" style="background: #1e293b; color: white;">
+            <div class="icon"><i class="fa-solid fa-utensils"></i></div>
             <h3>Restaurant</h3>
-            <p>Fresh meals, snacks and refreshments available for our guests.</p>
-            <a href="menu.html" class="text-link">View Menu &rarr;</a>
+            <p style="color: #cbd5e1; margin-top: 0.5rem;">Fresh meals, snacks and refreshments available for our guests.</p>
+            <a href="menu.html" style="color: var(--primary-red); font-weight: bold; text-decoration: none; display: inline-block; margin-top: 0.5rem;">View Menu &rarr;</a>
           </div>
 
-          <div class="contact-card">
-            <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+          <div class="card" style="background: #1e293b; color: white;">
+            <div class="icon"><i class="fa-solid fa-phone"></i></div>
             <h3>Phone</h3>
-            <p>
-              <a href="tel:+256766529086">+256 766 529086</a><br>
-              <a href="tel:+256709763803">+256 709 763803</a>
+            <p style="margin-top: 0.5rem;">
+              <a href="tel:+256766529086" style="color: #cbd5e1; text-decoration: none; display: block;">+256 766 529086</a>
+              <a href="tel:+256709763803" style="color: #cbd5e1; text-decoration: none; display: block;">+256 709 763803</a>
             </p>
           </div>
 
-          <div class="contact-card">
-            <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="card" style="background: #1e293b; color: white;">
+            <div class="icon"><i class="fa-solid fa-envelope"></i></div>
             <h3>Email</h3>
-            <p>
-              <a href="mailto:krecreationalcenter@gmail.com">krecreationalcenter@gmail.com</a>
+            <p style="margin-top: 0.5rem;">
+              <a href="mailto:krecreationalcenter@gmail.com" style="color: #cbd5e1; text-decoration: none;">krecreationalcenter@gmail.com</a>
             </p>
           </div>
         </div>
 
-        <div class="contact-action">
-          <a href="https://wa.me/256709763803" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
+        <div style="margin-top: 2.5rem;">
+          <a href="https://wa.me/256709763803" class="whatsapp-btn" target="_blank" rel="noopener noreferrer" style="display: inline-block; width: auto; padding: 0.8rem 2rem; font-size: 1.1rem; text-decoration: none;">
             <i class="fa-brands fa-whatsapp"></i> Contact Us on WhatsApp
           </a>
         </div>
 
-        <div class="social-links" style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
-          <a href="https://www.instagram.com/Kiteezi_recreational_center" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i> Instagram</a>
-          <a href="https://www.tiktok.com/@kiteezirecreationcentre" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-tiktok"></i> TikTok</a>
-          <a href="https://www.facebook.com/p/Kiteezi-Recreational-Centre-61569332887691/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i> Facebook</a>
+        <div class="social-links" style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
+          <a href="https://www.instagram.com/Kiteezi_recreational_center" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; font-size: 1.1rem;"><i class="fa-brands fa-instagram"></i> Instagram</a>
+          <a href="https://www.tiktok.com/@kiteezirecreationcentre" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; font-size: 1.1rem;"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+          <a href="https://www.facebook.com/p/Kiteezi-Recreational-Centre-61569332887691/" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; font-size: 1.1rem;"><i class="fa-brands fa-facebook"></i> Facebook</a>
         </div>
       </div>
     </section>
   </main>
 
   <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-brand">
-        <img src="images/LOGO.png" alt="Kiteezi Recreational Center">
-        <p>Relax. Play. Swim. Eat. Celebrate.</p>
+  <footer>
+    <div class="section-container" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; text-align: left; margin-bottom: 2rem;">
+      <div style="max-width: 300px;">
+        <img src="images/LOGO.png" alt="Kiteezi Recreational Center" style="height: 50px; margin-bottom: 0.8rem;">
+        <p style="color: var(--text-muted);">Relax. Play. Swim. Eat. Celebrate.</p>
       </div>
 
-      <div class="footer-links">
-        <h3>Quick Links</h3>
-        <a href="index.html">Home</a>
-        <a href="#about">About</a>
-        <a href="#facilities">Facilities</a>
-        <a href="menu.html">Menu</a>
-        <a href="personel.html">Personnel</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#contact">Contact</a>
+      <div>
+        <h3 style="color: white; margin-bottom: 0.8rem;">Quick Links</h3>
+        <ul style="list-style: none;">
+          <li><a href="index.html" style="color: var(--text-muted); text-decoration: none;">Home</a></li>
+          <li><a href="#about" style="color: var(--text-muted); text-decoration: none;">About</a></li>
+          <li><a href="#facilities" style="color: var(--text-muted); text-decoration: none;">Facilities</a></li>
+          <li><a href="menu.html" style="color: var(--text-muted); text-decoration: none;">Menu</a></li>
+          <li><a href="personel.html" style="color: var(--text-muted); text-decoration: none;">Personnel</a></li>
+          <li><a href="#reviews" style="color: var(--text-muted); text-decoration: none;">Reviews</a></li>
+          <li><a href="#contact" style="color: var(--text-muted); text-decoration: none;">Contact</a></li>
+        </ul>
       </div>
 
-      <div class="footer-contact">
-        <h3>Visit Us</h3>
-        <p>Kiteezi, opposite Shell Kiteezi</p>
-        <p>10:00 AM – 10:00 PM</p>
-        <p><a href="tel:+256766529086">+256 766 529086</a></p>
-        <p><a href="mailto:krecreationalcenter@gmail.com">krecreationalcenter@gmail.com</a></p>
+      <div>
+        <h3 style="color: white; margin-bottom: 0.8rem;">Visit Us</h3>
+        <p style="color: var(--text-muted);">Kiteezi, opposite Shell Kiteezi</p>
+        <p style="color: var(--text-muted);">10:00 AM – 10:00 PM</p>
+        <p><a href="tel:+256766529086" style="color: var(--text-muted); text-decoration: none;">+256 766 529086</a></p>
+        <p><a href="mailto:krecreationalcenter@gmail.com" style="color: var(--text-muted); text-decoration: none;">krecreationalcenter@gmail.com</a></p>
       </div>
     </div>
 
-    <div class="footer-bottom">
+    <div style="border-top: 1px solid #1e293b; padding-top: 1.5rem;">
       <p>© <span id="year"></span> Kiteezi Recreational Center. All Rights Reserved.</p>
     </div>
   </footer>
 
   <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">&times;</button>
-    <div class="lightbox-content" id="lightboxContent"></div>
+  <div class="modal" id="lightbox" aria-hidden="true">
+    <div class="modal-content" style="background: transparent; box-shadow: none;">
+      <span class="close-btn" id="lightboxClose" style="color: white; font-size: 2.5rem;">&times;</span>
+      <div id="lightboxContent"></div>
+    </div>
   </div>
 
   <!-- SCRIPTS -->
