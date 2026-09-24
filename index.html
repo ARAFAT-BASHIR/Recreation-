@@ -76,55 +76,56 @@
           </div>
 
           <div class="about-media">
-            <div class="media-gallery" data-media-area="about">
-              <!-- Dynamically populated via script.js -->
-            </div>
+            <div class="media-gallery" data-media-area="about"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FACILITIES SECTION -->
+    <!-- FACILITIES & DIRECT BOOKING SECTION -->
     <section class="section dark-bg" id="facilities">
       <div class="section-container">
         <div class="section-heading">
           <span class="subtitle" style="color: var(--primary-red);">WHAT WE OFFER</span>
-          <h2>Our Facilities</h2>
-          <p style="color: var(--text-muted); margin-bottom: 2rem;">Everything you need for fun, relaxation and unforgettable moments.</p>
+          <h2>Our Facilities &amp; Direct Bookings</h2>
+          <p style="color: var(--text-muted); margin-bottom: 2rem;">Enjoy swimming, sports, and private event venues. Book your spot in advance.</p>
         </div>
 
         <div class="cards-grid">
-          <!-- Swimming -->
+          <!-- Swimming Booking -->
           <article class="card">
             <div class="facility-media" data-media-area="swimming"></div>
             <div class="icon"><i class="fa-solid fa-water-ladder"></i></div>
-            <h3>Swimming</h3>
-            <p>Take a refreshing swim and enjoy time in our swimming area.</p>
+            <h3>Swimming Pools</h3>
+            <p>Day passes for adults &amp; kids, swimming lessons, and private pool sessions.</p>
+            <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Swimming Pool')">Book Swimming</button>
           </article>
 
-          <!-- Sports -->
+          <!-- Sports & Games Booking -->
           <article class="card">
             <div class="facility-media" data-media-area="sports"></div>
             <div class="icon"><i class="fa-solid fa-volleyball"></i></div>
-            <h3>Sports &amp; Play</h3>
-            <p>Enjoy games, sports and activities with friends and family.</p>
+            <h3>Sports &amp; Games Grounds</h3>
+            <p>Volleyball, football grounds, kids' play park, and group activities.</p>
+            <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Sports & Games Grounds')">Book Games Ground</button>
           </article>
 
-          <!-- Restaurant -->
+          <!-- Restaurant & Buffet Shortcut -->
           <article class="card highlight">
             <div class="facility-media" data-media-area="restaurant"></div>
             <div class="icon"><i class="fa-solid fa-utensils"></i></div>
-            <h3>Restaurant</h3>
-            <p>Enjoy delicious meals and refreshments prepared for our guests.</p>
-            <a href="menu.html" style="color: var(--primary-red); font-weight: bold; text-decoration: none; display: inline-block; margin-top: 0.5rem;">View Menu &rarr;</a>
+            <h3>Restaurant &amp; Event Buffets</h3>
+            <p>A la carte meals, quick snacks, and special party buffet catering.</p>
+            <a href="menu.html" class="btn-primary full-width-btn" style="margin-top: 1rem; text-align:center; text-decoration:none;">View Menu &amp; Buffets</a>
           </article>
 
-          <!-- Events -->
+          <!-- Events Booking -->
           <article class="card">
             <div class="facility-media" data-media-area="events"></div>
             <div class="icon"><i class="fa-solid fa-champagne-glasses"></i></div>
-            <h3>Events</h3>
-            <p>A great space for celebrations, gatherings, parties and special occasions.</p>
+            <h3>Event &amp; Party Venues</h3>
+            <p>Host birthdays, weddings, reunions, and corporate functions with us.</p>
+            <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Event Venue Grounds')">Book Venue</button>
           </article>
         </div>
       </div>
@@ -140,123 +141,17 @@
       </div>
     </section>
 
-    <!-- MENU CTA -->
-    <section class="section dark-bg" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('images/LOGO.png') center/cover;">
-      <div class="section-container">
-        <span class="subtitle" style="color: var(--primary-red);">GOOD FOOD • GREAT MOMENTS</span>
-        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Hungry?</h2>
-        <p style="color: #cbd5e1; margin-bottom: 1.5rem;">Explore our menu and discover something delicious for everyone.</p>
-        <a href="menu.html" class="btn-primary">View Our Menu</a>
-      </div>
-    </section>
-
-<select id="menu-category-input" required>
-  <option value="breakfast">Breakfast &amp; Snacks</option>
-  <option value="chicken">Chicken</option>
-  <option value="fish">Fish</option>
-  <option value="goat">Goat</option>
-  <option value="liver">Liver</option>
-  <option value="burgers-pizza">Burgers &amp; Pizzas</option>
-  <option value="buffet">Buffets &amp; Party Packages</option>
-  <option value="activities">Swimming &amp; Sports Bookings</option>
-</select>
-
-    <!-- EVENTS, BUFFET & ACTIVITY BOOKINGS -->
-<section class="section dark-bg" id="bookings">
-  <div class="section-container">
-    <span class="subtitle" style="color: var(--primary-red);">RESERVATIONS & PACKAGES</span>
-    <h2>Book Events, Buffets &amp; Activities</h2>
-    <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Host your private parties, book buffet packages, or reserve grounds and pool activities.</p>
-
-    <div class="cards-grid">
-      <!-- Event Venue Booking -->
-      <article class="card">
-        <div class="icon"><i class="fa-solid fa-champagne-glasses"></i></div>
-        <h3>Party &amp; Event Booking</h3>
-        <p>Private venues for birthdays, weddings, family gatherings, and corporate retreats.</p>
-        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Event Venue')">Book Venue</button>
-      </article>
-
-      <!-- Buffet Catering Packages -->
-      <article class="card highlight">
-        <div class="icon"><i class="fa-solid fa-utensils"></i></div>
-        <h3>Event Buffet Catering</h3>
-        <p>Custom party buffets featuring fresh local dishes, grilled options, snacks, and drinks.</p>
-        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Event Buffet')">Inquire Buffet</button>
-      </article>
-
-      <!-- Swimming Passes & Lessons -->
-      <article class="card">
-        <div class="icon"><i class="fa-solid fa-water-ladder"></i></div>
-        <h3>Swimming Pools</h3>
-        <p>Day passes for adults &amp; kids, swimming lessons, and private pool party rentals.</p>
-        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Swimming')">Book Pool Access</button>
-      </article>
-
-      <!-- Sports & Games Grounds -->
-      <article class="card">
-        <div class="icon"><i class="fa-solid fa-volleyball"></i></div>
-        <h3>Sports &amp; Games</h3>
-        <p>Volleyball pitch, kids' play area, outdoor games, and team-building packages.</p>
-        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Sports & Games')">Book Sports Grounds</button>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- GENERAL BOOKING MODAL -->
-<div class="modal" id="bookingModal" aria-hidden="true">
-  <div class="modal-content">
-    <span class="close-btn" onclick="closeBookingModal()">&times;</span>
-    <h3 id="bookingModalTitle" style="margin-bottom: 1rem; color: var(--text-dark);">Book Reservation</h3>
-    
-    <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
-      <input type="hidden" id="bookingCategory">
-      
-      <div style="margin-bottom: 0.8rem; text-align: left;">
-        <label style="font-weight: 600; font-size: 0.9rem;">Full Name</label>
-        <input type="text" id="bookingName" placeholder="Your Name" required>
-      </div>
-
-      <div style="margin-bottom: 0.8rem; text-align: left;">
-        <label style="font-weight: 600; font-size: 0.9rem;">Phone Number</label>
-        <input type="tel" id="bookingPhone" placeholder="+256..." required>
-      </div>
-
-      <div style="margin-bottom: 0.8rem; text-align: left;">
-        <label style="font-weight: 600; font-size: 0.9rem;">Event / Visit Date</label>
-        <input type="date" id="bookingDate" required>
-      </div>
-
-      <div style="margin-bottom: 0.8rem; text-align: left;">
-        <label style="font-weight: 600; font-size: 0.9rem;">Estimated Guests / People</label>
-        <input type="number" id="bookingGuests" min="1" placeholder="Number of attendees" required>
-      </div>
-
-      <div style="margin-bottom: 1rem; text-align: left;">
-        <label style="font-weight: 600; font-size: 0.9rem;">Special Requests / Details</label>
-        <textarea id="bookingNotes" rows="3" placeholder="Tell us about food preferences, setup, or specific activities..."></textarea>
-      </div>
-
-      <button type="submit" class="whatsapp-btn">
-        <i class="fa-brands fa-whatsapp"></i> Confirm &amp; Send to WhatsApp
-      </button>
-    </form>
-  </div>
-</div>
-
-    
     <!-- REVIEWS SECTION -->
-    <section class="section" id="reviews">
+    <section class="section dark-bg" id="reviews">
       <div class="section-container">
-        <span class="subtitle">GUEST EXPERIENCES</span>
+        <span class="subtitle" style="color: var(--primary-red);">GUEST EXPERIENCES</span>
         <h2>What Our Guests Say</h2>
 
         <div class="cards-grid" id="reviewsContainer" style="margin-top: 2rem; margin-bottom: 3rem;">
           <div class="loading-message" style="grid-column: 1/-1; color: var(--text-muted);">Loading reviews...</div>
         </div>
 
-        <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <div class="card" style="max-width: 600px; margin: 0 auto; background: white; color: var(--text-dark);">
           <h3 style="margin-bottom: 1rem;">Share Your Experience</h3>
           <form id="reviewForm">
             <div style="margin-bottom: 1rem; text-align: left;">
@@ -289,50 +184,43 @@
     </section>
 
     <!-- CONTACT SECTION -->
-    <section class="section dark-bg" id="contact">
+    <section class="section" id="contact">
       <div class="section-container">
-        <span class="subtitle" style="color: var(--primary-red);">GET IN TOUCH</span>
+        <span class="subtitle">GET IN TOUCH</span>
         <h2 style="margin-bottom: 2rem;">Contact Kiteezi Recreational Center</h2>
 
         <div class="cards-grid">
-          <div class="card" style="background: #1e293b; color: white;">
+          <div class="card">
             <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
             <h3>Location</h3>
             <p style="margin-top: 0.5rem;">
-              <a href="https://www.google.com/maps/place/kiteezi+recreation+center/data=!4m2!3m1!1s0x177db11709cac499:0x30f8c01c7912656a?sa=X&amp;ved=1t:242&amp;ictx=111" target="_blank" rel="noopener noreferrer" style="color: #cbd5e1; text-decoration: none;">
+              <a href="https://www.google.com/maps/place/kiteezi+recreation+center/data=!4m2!3m1!1s0x177db11709cac499:0x30f8c01c7912656a?sa=X&amp;ved=1t:242&amp;ictx=111" target="_blank" rel="noopener noreferrer" style="color: var(--text-dark); text-decoration: none;">
                 Kiteezi, opposite Shell Kiteezi, Uganda
               </a>
             </p>
           </div>
 
-          <div class="card" style="background: #1e293b; color: white;">
+          <div class="card">
             <div class="icon"><i class="fa-solid fa-clock"></i></div>
             <h3>Opening Hours</h3>
-            <p style="color: #cbd5e1; margin-top: 0.5rem;">Every Day</p>
+            <p style="color: var(--text-muted); margin-top: 0.5rem;">Every Day</p>
             <strong style="color: var(--primary-red); display: block; margin-top: 0.2rem;">10:00 AM – 10:00 PM</strong>
           </div>
 
-          <div class="card" style="background: #1e293b; color: white;">
-            <div class="icon"><i class="fa-solid fa-utensils"></i></div>
-            <h3>Restaurant</h3>
-            <p style="color: #cbd5e1; margin-top: 0.5rem;">Fresh meals, snacks and refreshments available for our guests.</p>
-            <a href="menu.html" style="color: var(--primary-red); font-weight: bold; text-decoration: none; display: inline-block; margin-top: 0.5rem;">View Menu &rarr;</a>
-          </div>
-
-          <div class="card" style="background: #1e293b; color: white;">
+          <div class="card">
             <div class="icon"><i class="fa-solid fa-phone"></i></div>
             <h3>Phone</h3>
             <p style="margin-top: 0.5rem;">
-              <a href="tel:+256766529086" style="color: #cbd5e1; text-decoration: none; display: block;">+256 766 529086</a>
-              <a href="tel:+256709763803" style="color: #cbd5e1; text-decoration: none; display: block;">+256 709 763803</a>
+              <a href="tel:+256766529086" style="color: var(--text-dark); text-decoration: none; display: block;">+256 766 529086</a>
+              <a href="tel:+256709763803" style="color: var(--text-dark); text-decoration: none; display: block;">+256 709 763803</a>
             </p>
           </div>
 
-          <div class="card" style="background: #1e293b; color: white;">
+          <div class="card">
             <div class="icon"><i class="fa-solid fa-envelope"></i></div>
             <h3>Email</h3>
             <p style="margin-top: 0.5rem;">
-              <a href="mailto:krecreationalcenter@gmail.com" style="color: #cbd5e1; text-decoration: none;">krecreationalcenter@gmail.com</a>
+              <a href="mailto:krecreationalcenter@gmail.com" style="color: var(--text-dark); text-decoration: none;">krecreationalcenter@gmail.com</a>
             </p>
           </div>
         </div>
@@ -342,15 +230,50 @@
             <i class="fa-brands fa-whatsapp"></i> Contact Us on WhatsApp
           </a>
         </div>
-
-        <div class="social-links" style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
-          <a href="https://www.instagram.com/Kiteezi_recreational_center" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; font-size: 1.1rem;"><i class="fa-brands fa-instagram"></i> Instagram</a>
-          <a href="https://www.tiktok.com/@kiteezirecreationcentre" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; font-size: 1.1rem;"><i class="fa-brands fa-tiktok"></i> TikTok</a>
-          <a href="https://www.facebook.com/p/Kiteezi-Recreational-Centre-61569332887691/" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; font-size: 1.1rem;"><i class="fa-brands fa-facebook"></i> Facebook</a>
-        </div>
       </div>
     </section>
   </main>
+
+  <!-- POPUP BOOKING MODAL (For Swimming, Games, and Venues) -->
+  <div class="modal" id="bookingModal" aria-hidden="true">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeBookingModal()">&times;</span>
+      <h3 id="bookingModalTitle" style="margin-bottom: 1rem; color: var(--text-dark);">Book Reservation</h3>
+      
+      <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+        <input type="hidden" id="bookingCategory">
+        
+        <div style="margin-bottom: 0.8rem; text-align: left;">
+          <label style="font-weight: 600; font-size: 0.9rem;">Full Name</label>
+          <input type="text" id="bookingName" placeholder="Your Name" required>
+        </div>
+
+        <div style="margin-bottom: 0.8rem; text-align: left;">
+          <label style="font-weight: 600; font-size: 0.9rem;">Phone Number</label>
+          <input type="tel" id="bookingPhone" placeholder="+256..." required>
+        </div>
+
+        <div style="margin-bottom: 0.8rem; text-align: left;">
+          <label style="font-weight: 600; font-size: 0.9rem;">Visit / Event Date</label>
+          <input type="date" id="bookingDate" required>
+        </div>
+
+        <div style="margin-bottom: 0.8rem; text-align: left;">
+          <label style="font-weight: 600; font-size: 0.9rem;">Number of People</label>
+          <input type="number" id="bookingGuests" min="1" placeholder="e.g. 1" required>
+        </div>
+
+        <div style="margin-bottom: 1rem; text-align: left;">
+          <label style="font-weight: 600; font-size: 0.9rem;">Special Instructions / Notes</label>
+          <textarea id="bookingNotes" rows="3" placeholder="Any specific requirements or questions..."></textarea>
+        </div>
+
+        <button type="submit" class="whatsapp-btn">
+          <i class="fa-brands fa-whatsapp"></i> Reserve via WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <footer>
@@ -386,14 +309,6 @@
       <p>© <span id="year"></span> Kiteezi Recreational Center. All Rights Reserved.</p>
     </div>
   </footer>
-
-  <!-- LIGHTBOX -->
-  <div class="modal" id="lightbox" aria-hidden="true">
-    <div class="modal-content" style="background: transparent; box-shadow: none;">
-      <span class="close-btn" id="lightboxClose" style="color: white; font-size: 2.5rem;">&times;</span>
-      <div id="lightboxContent"></div>
-    </div>
-  </div>
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
