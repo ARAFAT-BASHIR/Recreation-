@@ -1,613 +1,2178 @@
+```javascript
+// =========================================================
+// KITEEZI RECREATIONAL CENTER
+// COMPLETE INTEGRATED SCRIPT
+// =========================================================
+
 // =========================================================
 // SUPABASE CLIENT INITIALIZATION
 // =========================================================
+
 const SUPABASE_URL = "https://qxdtxlphhzkjleqtmuen.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_tVPfEkEPgHfYB8kA_sVw_w_i2b2PVZW";
 
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const supabase = window.supabase
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
 
-// Global State Variables
+
+// =========================================================
+// GLOBAL STATE
+// =========================================================
+
 let allMenuItems = [];
+let allBuffetPackages = [];
 let shoppingCart = [];
-let currentCategoryFilter = 'all';
-let currentMediaArea = 'about';
+let currentCategoryFilter = "all";
+let currentMediaArea = "about";
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Update year dynamically
-  const yearEl = document.getElementById('year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Navigation Toggle
-  const menuToggle = document.getElementById('menuToggle');
-  const mainNav = document.getElementById('mainNav');
+// =========================================================
+// UTILITY FUNCTIONS
+// =========================================================
+
+function escapeHTML(value) {
+  if (value === null || value === undefined) return "";
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function showError(message) {
+  console.error(message);
+}
+
+function formatUGX(value) {
+  return Number(value || 0).toLocaleString() + " UGX";
+}
+
+
+// =========================================================
+// INITIALIZATION
+// =========================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Footer year
+  const yearEl =
+    document.getElementById("year") ||
+    document.getElementById("current-year");
+
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
+
+  // Mobile navigation
+  const menuToggle = document.getElementById("menuToggle");
+  const mainNav = document.getElementById("mainNav");
 
   if (menuToggle && mainNav) {
-    menuToggle.addEventListener('click', () => {
-      mainNav.classList.toggle('active');
+    menuToggle.addEventListener("click", () => {
+      mainNav.classList.toggle("active");
     });
   }
 
-  // Close Navigation on click outside or item select
-  document.querySelectorAll('#mainNav a').forEach(link => {
-    link.addEventListener('click', () => {
-      if (mainNav) mainNav.classList.remove('active');
+  document.querySelectorAll("#mainNav a").forEach(link => {
+    link.addEventListener("click", () => {
+      if (mainNav) {
+        mainNav.classList.remove("active");
+      }
     });
   });
 
-  // Public Home Data
+  // Public content
   fetchAnnouncements();
   fetchReviews();
   setupReviewSubmission();
+  fetchPublicMedia();
+  fetchPublicPersonnel();
 
-  // Check Admin Page Session
-  if (document.getElementById('admin-login-card')) {
+  // Menu page
+  if (document.getElementById("menu-grid")) {
+    fetchLiveMenuItems();
+    fetchBuffetPackages();
+  }
+
+  // Admin page
+  if (document.getElementById("admin-login-card")) {
     checkAdminSession();
   }
 
-  // Fetch Menu Items if on Menu Page
-  if (document.getElementById('menu-grid')) {
-    fetchLiveMenuItems();
+  // Admin media selector
+  const mediaAreaSelector = document.getElementById("media-area-input");
+
+  if (mediaAreaSelector) {
+    currentMediaArea = mediaAreaSelector.value || "about";
+
+    mediaAreaSelector.addEventListener("change", function () {
+      currentMediaArea = this.value;
+      loadAdminMedia(currentMediaArea);
+    });
   }
 });
 
+
 // =========================================================
-// ANNOUNCEMENTS & REVIEWS (PUBLIC)
+// ANNOUNCEMENT
 // =========================================================
+
 function closeBanner() {
-  const banner = document.getElementById('announcement-banner');
-  if (banner) banner.style.display = 'none';
-}
+  const banner = document.getElementById("announcement-banner");
 
-async function fetchAnnouncements() {
-  if (!supabase) return;
-  try {
-    const { data, error } = await supabase
-      .from('site_announcements')
-      .select('*')
-      .order('id', { ascending: false })
-      .limit(1);
-
-    if (error || !data || data.length === 0) return;
-
-    const banner = document.getElementById('announcement-banner');
-    const textEl = document.getElementById('announcement-text');
-
-    if (banner && textEl && data[0].message) {
-      textEl.innerHTML = `<i class="fa-solid fa-bullhorn"></i> ${data[0].message}`;
-      banner.style.display = 'block';
-    }
-  } catch (e) {
-    console.error("Announcement load error:", e);
+  if (banner) {
+    banner.style.display = "none";
   }
 }
 
-async function fetchReviews() {
-  const container = document.getElementById('reviewsContainer');
-  if (!container || !supabase) return;
+
+async function fetchAnnouncements() {
+
+  if (!supabase) return;
+
+  const banner = document.getElementById("announcement-banner");
+  const textEl = document.getElementById("announcement-text");
+
+  if (!banner || !textEl) return;
 
   try {
-    const { data, error } = await supabase
-      .from('reviews')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(6);
 
-    if (error || !data || data.length === 0) {
-      container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">No reviews posted yet. Be the first to leave one!</p>';
+    const { data, error } = await supabase
+      .from("site_announcements")
+      .select("message")
+      .eq("id", 1)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Announcement error:", error);
       return;
     }
 
-    container.innerHTML = '';
-    data.forEach(item => {
-      const stars = '★'.repeat(item.rating || 5) + '☆'.repeat(5 - (item.rating || 5));
-      const reviewCard = document.createElement('div');
-      reviewCard.className = 'card';
-      reviewCard.innerHTML = `
-        <div style="color: #f59e0b; margin-bottom: 0.5rem; font-size: 1.1rem;">${stars}</div>
-        <p style="font-style: italic; margin-bottom: 1rem;">"${item.message}"</p>
-        <strong style="display: block; color: var(--primary-red);">- ${item.name}</strong>
-      `;
-      container.appendChild(reviewCard);
-    });
-  } catch (e) {
-    container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Unable to load reviews right now.</p>';
+    if (!data || !data.message) {
+      banner.style.display = "none";
+      return;
+    }
+
+    textEl.innerHTML =
+      '<i class="fa-solid fa-bullhorn"></i> ' +
+      escapeHTML(data.message);
+
+    banner.style.display = "block";
+
+  } catch (error) {
+    console.error("Announcement load error:", error);
   }
 }
 
-function setupReviewSubmission() {
-  const form = document.getElementById('reviewForm');
-  const status = document.getElementById('reviewStatus');
 
-  if (!form) return;
+// =========================================================
+// ADMIN ANNOUNCEMENT
+// =========================================================
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (status) {
-      status.textContent = 'Submitting...';
-      status.style.color = 'var(--text-muted)';
+async function loadAdminAnnouncement() {
+
+  const input =
+    document.getElementById("admin-announcement-input");
+
+  if (!input || !supabase) return;
+
+  const { data, error } = await supabase
+    .from("site_announcements")
+    .select("message")
+    .eq("id", 1)
+    .maybeSingle();
+
+  if (!error && data) {
+    input.value = data.message || "";
+  }
+}
+
+
+async function updateAnnouncement(e) {
+
+  e.preventDefault();
+
+  const input =
+    document.getElementById("admin-announcement-input");
+
+  if (!input || !supabase) return;
+
+  const message = input.value.trim();
+
+  if (!message) {
+    alert("Please enter an announcement.");
+    return;
+  }
+
+  const { error } = await supabase
+    .from("site_announcements")
+    .upsert({
+      id: 1,
+      message: message,
+      updated_at: new Date().toISOString()
+    });
+
+  if (error) {
+
+    console.error(error);
+    alert("Failed to update announcement: " + error.message);
+    return;
+  }
+
+  alert("Announcement updated successfully.");
+
+  await fetchAnnouncements();
+}
+
+
+// =========================================================
+// REVIEWS
+// =========================================================
+
+async function fetchReviews() {
+
+  const container =
+    document.getElementById("reviewsContainer");
+
+  if (!container || !supabase) return;
+
+  try {
+
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(6);
+
+    if (error) {
+      console.error("Review load error:", error);
+
+      container.innerHTML =
+        '<p style="color:var(--text-muted);grid-column:1/-1;">Unable to load reviews right now.</p>';
+
+      return;
     }
 
-    const name = document.getElementById('reviewName').value;
-    const rating = parseInt(document.getElementById('reviewRating').value);
-    const message = document.getElementById('reviewMessage').value;
+    if (!data || data.length === 0) {
 
-    if (!supabase) {
+      container.innerHTML =
+        '<p style="color:var(--text-muted);grid-column:1/-1;">No reviews posted yet. Be the first to leave one!</p>';
+
+      return;
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(item => {
+
+      const rating = Math.max(
+        0,
+        Math.min(5, Number(item.rating) || 0)
+      );
+
+      const stars =
+        "★".repeat(rating) +
+        "☆".repeat(5 - rating);
+
+      const card = document.createElement("div");
+
+      card.className = "card";
+
+      card.innerHTML = `
+        <div style="color:#f59e0b;margin-bottom:.5rem;font-size:1.1rem;">
+          ${stars}
+        </div>
+
+        <p style="font-style:italic;margin-bottom:1rem;">
+          "${escapeHTML(item.message)}"
+        </p>
+
+        <strong style="display:block;color:var(--primary-red);">
+          - ${escapeHTML(item.name)}
+        </strong>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      '<p style="color:var(--text-muted);grid-column:1/-1;">Unable to load reviews right now.</p>';
+  }
+}
+
+
+function setupReviewSubmission() {
+
+  const form = document.getElementById("reviewForm");
+  const status = document.getElementById("reviewStatus");
+
+  if (!form || !supabase) return;
+
+  // Prevent duplicate listeners
+  if (form.dataset.initialized === "true") return;
+
+  form.dataset.initialized = "true";
+
+  form.addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    if (status) {
+      status.textContent = "Submitting...";
+      status.style.color = "var(--text-muted)";
+    }
+
+    const name =
+      document.getElementById("reviewName").value.trim();
+
+    const rating =
+      parseInt(
+        document.getElementById("reviewRating").value,
+        10
+      );
+
+    const message =
+      document.getElementById("reviewMessage").value.trim();
+
+    if (!name || !rating || !message) {
+
       if (status) {
-        status.textContent = 'Service unavailable. Please try again later.';
-        status.style.color = 'red';
+        status.textContent =
+          "Please complete all review fields.";
+        status.style.color = "red";
       }
+
       return;
     }
 
     const { error } = await supabase
-      .from('reviews')
-      .insert([{ name, rating, message }]);
+      .from("reviews")
+      .insert([
+        {
+          name,
+          rating,
+          message
+        }
+      ]);
 
     if (error) {
+
+      console.error(error);
+
       if (status) {
-        status.textContent = 'Error: ' + error.message;
-        status.style.color = 'red';
+        status.textContent =
+          "Error: " + error.message;
+        status.style.color = "red";
       }
-    } else {
-      if (status) {
-        status.textContent = 'Thank you! Your review has been submitted.';
-        status.style.color = 'green';
-      }
-      form.reset();
-      fetchReviews();
+
+      return;
     }
+
+    if (status) {
+      status.textContent =
+        "Thank you! Your review has been submitted.";
+      status.style.color = "green";
+    }
+
+    form.reset();
+
+    await fetchReviews();
   });
 }
 
+
 // =========================================================
-// MENU & CART DRAWER FUNCTIONALITY
+// PUBLIC MENU
 // =========================================================
+
 async function fetchLiveMenuItems() {
-  const grid = document.getElementById('menu-grid');
+
+  const grid =
+    document.getElementById("menu-grid");
+
   if (!grid || !supabase) return;
 
-  grid.innerHTML = '<p>Loading menu items...</p>';
+  grid.innerHTML =
+    '<p style="grid-column:1/-1;">Loading menu items...</p>';
 
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*')
-    .eq('available', true);
+  try {
 
-  if (error || !data || data.length === 0) {
-    grid.innerHTML = '<p style="grid-column: 1/-1;">No menu items available at the moment.</p>';
-    return;
+    const { data, error } = await supabase
+      .from("menu_items")
+      .select("*")
+      .eq("in_stock", true)
+      .order("id", { ascending: false });
+
+    if (error) {
+
+      console.error("Menu error:", error);
+
+      grid.innerHTML =
+        '<p style="grid-column:1/-1;">Unable to load menu items.</p>';
+
+      return;
+    }
+
+    allMenuItems = data || [];
+
+    renderMenuItems();
+
+  } catch (error) {
+
+    console.error(error);
+
+    grid.innerHTML =
+      '<p style="grid-column:1/-1;">Unable to load menu items.</p>';
   }
-
-  allMenuItems = data;
-  renderMenuItems();
 }
+
 
 function renderMenuItems() {
-  const grid = document.getElementById('menu-grid');
+
+  const grid =
+    document.getElementById("menu-grid");
+
   if (!grid) return;
 
-  const filtered = currentCategoryFilter === 'all' 
-    ? allMenuItems 
-    : allMenuItems.filter(item => item.category === currentCategoryFilter);
-
-  if (filtered.length === 0) {
-    grid.innerHTML = '<p style="grid-column: 1/-1;">No items found in this category.</p>';
+  if (currentCategoryFilter === "buffet") {
+    renderBuffetPackages();
     return;
   }
 
-  grid.innerHTML = filtered.map(item => `
-    <div class="card">
-      ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:0.8rem;">` : ''}
-      <h3>${item.name}</h3>
-      <p style="color: var(--primary-red); font-weight: bold; margin: 0.5rem 0;">${item.price.toLocaleString()} UGX</p>
-      <button class="btn-primary full-width-btn" onclick="addToCart(${item.id})">
-        <i class="fa-solid fa-plus"></i> Add to Order
-      </button>
-    </div>
-  `).join('');
+  const filtered =
+    currentCategoryFilter === "all"
+      ? allMenuItems
+      : allMenuItems.filter(
+          item => item.category === currentCategoryFilter
+        );
+
+  if (!filtered.length) {
+
+    grid.innerHTML =
+      '<p style="grid-column:1/-1;">No items found in this category.</p>';
+
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => {
+
+    const image =
+      item.img_url
+        ? `
+          <img
+            src="${escapeHTML(item.img_url)}"
+            alt="${escapeHTML(item.name)}"
+            style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:.8rem;"
+          >
+        `
+        : "";
+
+    const sides =
+      item.requires_sides
+        ? `
+          <small style="display:block;color:var(--text-muted);margin-bottom:.5rem;">
+            Requires sides
+          </small>
+        `
+        : "";
+
+    return `
+      <div class="card">
+
+        ${image}
+
+        <h3>${escapeHTML(item.name)}</h3>
+
+        <p style="color:var(--primary-red);font-weight:bold;margin:.5rem 0;">
+          ${formatUGX(item.price)}
+        </p>
+
+        ${sides}
+
+        <button
+          class="btn-primary full-width-btn"
+          onclick="addToCart(${Number(item.id)})"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Add to Order
+        </button>
+
+      </div>
+    `;
+
+  }).join("");
 }
 
+
+// =========================================================
+// MENU CATEGORY FILTER
+// =========================================================
+
 function filterCategory(category, buttonEl) {
+
   currentCategoryFilter = category;
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  if (buttonEl) buttonEl.classList.add('active');
+
+  document
+    .querySelectorAll(".tab-btn")
+    .forEach(btn => btn.classList.remove("active"));
+
+  if (buttonEl) {
+    buttonEl.classList.add("active");
+  }
+
   renderMenuItems();
 }
 
-function toggleCartDrawer() {
-  const drawer = document.getElementById('cart-drawer');
-  if (drawer) drawer.classList.toggle('open');
+
+// Compatibility with repaired version
+function filterMenuCategory(category) {
+  filterCategory(category);
 }
 
+
+// =========================================================
+// BUFFET PACKAGES
+// =========================================================
+
+async function fetchBuffetPackages() {
+
+  if (!supabase) return;
+
+  try {
+
+    const { data, error } = await supabase
+      .from("buffet_packages")
+      .select("*")
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.error("Buffet error:", error);
+      return;
+    }
+
+    allBuffetPackages = data || [];
+
+    const buffetContainer =
+      document.getElementById("buffet-container");
+
+    if (buffetContainer) {
+      renderBuffetContainer();
+    }
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+function renderBuffetContainer() {
+
+  const container =
+    document.getElementById("buffet-container");
+
+  if (!container) return;
+
+  if (!allBuffetPackages.length) {
+
+    container.innerHTML =
+      '<p>No buffet packages available.</p>';
+
+    return;
+  }
+
+  container.innerHTML =
+    allBuffetPackages.map(pkg => {
+
+      const items = Array.isArray(pkg.items)
+        ? pkg.items
+        : [];
+
+      return `
+        <div class="card">
+
+          <h3>
+            ${escapeHTML(pkg.title)}
+          </h3>
+
+          <p style="color:var(--primary-red);font-weight:bold;">
+            ${formatUGX(pkg.price)}
+          </p>
+
+          <p>
+            ${escapeHTML(pkg.description || "")}
+          </p>
+
+          ${
+            items.length
+              ? `
+                <ul>
+                  ${items.map(item =>
+                    `<li>${escapeHTML(item)}</li>`
+                  ).join("")}
+                </ul>
+              `
+              : ""
+          }
+
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+function renderBuffetPackages() {
+
+  const grid =
+    document.getElementById("menu-grid");
+
+  if (!grid) return;
+
+  if (!allBuffetPackages.length) {
+
+    grid.innerHTML =
+      '<p style="grid-column:1/-1;">No buffet packages available.</p>';
+
+    return;
+  }
+
+  grid.innerHTML =
+    allBuffetPackages.map(pkg => {
+
+      const items = Array.isArray(pkg.items)
+        ? pkg.items
+        : [];
+
+      return `
+        <div class="card">
+
+          <h3>${escapeHTML(pkg.title)}</h3>
+
+          <p style="color:var(--primary-red);font-weight:bold;margin:.5rem 0;">
+            ${formatUGX(pkg.price)}
+          </p>
+
+          <p>
+            ${escapeHTML(pkg.description || "")}
+          </p>
+
+          ${
+            items.length
+              ? `
+                <ul>
+                  ${items.map(item =>
+                    `<li>${escapeHTML(item)}</li>`
+                  ).join("")}
+                </ul>
+              `
+              : ""
+          }
+
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+// =========================================================
+// CART
+// =========================================================
+
+function toggleCartDrawer() {
+
+  const drawer =
+    document.getElementById("cart-drawer");
+
+  if (drawer) {
+    drawer.classList.toggle("open");
+  }
+}
+
+
 function addToCart(itemId) {
-  const item = allMenuItems.find(i => i.id === itemId);
+
+  const item =
+    allMenuItems.find(
+      i => Number(i.id) === Number(itemId)
+    );
+
   if (!item) return;
 
-  const existing = shoppingCart.find(i => i.id === itemId);
+  const existing =
+    shoppingCart.find(
+      i => Number(i.id) === Number(itemId)
+    );
+
   if (existing) {
     existing.quantity += 1;
   } else {
-    shoppingCart.push({ ...item, quantity: 1 });
+
+    shoppingCart.push({
+      ...item,
+      quantity: 1
+    });
+
   }
 
   updateCartUI();
   toggleCartDrawer();
 }
 
+
 function removeFromCart(itemId) {
-  shoppingCart = shoppingCart.filter(i => i.id !== itemId);
+
+  shoppingCart =
+    shoppingCart.filter(
+      i => Number(i.id) !== Number(itemId)
+    );
+
   updateCartUI();
 }
 
+
 function updateCartUI() {
-  const list = document.getElementById('cart-items-list');
-  const countEl = document.getElementById('cart-badge-count');
-  const totalEl = document.getElementById('cart-total-price');
 
-  const totalCount = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const list =
+    document.getElementById("cart-items-list");
 
-  if (countEl) countEl.textContent = totalCount;
-  if (totalEl) totalEl.textContent = `${totalPrice.toLocaleString()} UGX`;
+  const countEl =
+    document.getElementById("cart-badge-count");
+
+  const totalEl =
+    document.getElementById("cart-total-price");
+
+  const totalCount =
+    shoppingCart.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+
+  const totalPrice =
+    shoppingCart.reduce(
+      (sum, item) =>
+        sum + Number(item.price) * item.quantity,
+      0
+    );
+
+  if (countEl) {
+    countEl.textContent = totalCount;
+  }
+
+  if (totalEl) {
+    totalEl.textContent =
+      totalPrice.toLocaleString() + " UGX";
+  }
 
   if (!list) return;
 
-  if (shoppingCart.length === 0) {
-    list.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 2rem 0;">Your cart is empty.</p>';
+  if (!shoppingCart.length) {
+
+    list.innerHTML =
+      '<p style="text-align:center;color:var(--text-muted);padding:2rem 0;">Your cart is empty.</p>';
+
     return;
   }
 
-  list.innerHTML = shoppingCart.map(item => `
-    <div class="cart-item">
-      <div>
-        <strong>${item.name}</strong> x ${item.quantity}<br>
-        <small>${(item.price * item.quantity).toLocaleString()} UGX</small>
+  list.innerHTML =
+    shoppingCart.map(item => `
+
+      <div class="cart-item">
+
+        <div>
+
+          <strong>
+            ${escapeHTML(item.name)}
+          </strong>
+
+          x ${item.quantity}
+
+          <br>
+
+          <small>
+            ${(Number(item.price) * item.quantity).toLocaleString()} UGX
+          </small>
+
+        </div>
+
+        <button
+          class="btn-delete"
+          onclick="removeFromCart(${Number(item.id)})"
+        >
+          &times;
+        </button>
+
       </div>
-      <button class="btn-delete" onclick="removeFromCart(${item.id})">&times;</button>
-    </div>
-  `).join('');
+
+    `).join("");
 }
+
 
 function checkoutToWhatsApp() {
-  if (shoppingCart.length === 0) {
-    alert('Your cart is empty.');
+
+  if (!shoppingCart.length) {
+    alert("Your cart is empty.");
     return;
   }
 
-  const name = document.getElementById('cust-name').value;
-  const phone = document.getElementById('cust-phone').value;
-  const location = document.getElementById('cust-location').value;
+  const name =
+    document.getElementById("cust-name").value.trim();
+
+  const phone =
+    document.getElementById("cust-phone").value.trim();
+
+  const location =
+    document.getElementById("cust-location").value.trim();
 
   if (!name || !phone) {
-    alert('Please enter your Name and Phone Number.');
+    alert("Please enter your Name and Phone Number.");
     return;
   }
 
-  let message = `*NEW MENU ORDER — KITEEZI RECREATIONAL CENTER*\n\n`;
-  message += `*Customer Details:*\n`;
+  let message =
+    "*NEW MENU ORDER — KITEEZI RECREATIONAL CENTER*\n\n";
+
+  message += "*Customer Details:*\n";
   message += `- Name: ${name}\n`;
   message += `- Phone: ${phone}\n`;
-  if (location) message += `- Table/Location: ${location}\n`;
-  message += `\n*Order Items:*\n`;
+
+  if (location) {
+    message += `- Table/Location: ${location}\n`;
+  }
+
+  message += "\n*Order Items:*\n";
 
   let totalPrice = 0;
+
   shoppingCart.forEach(item => {
-    const itemTotal = item.price * item.quantity;
+
+    const itemTotal =
+      Number(item.price) * item.quantity;
+
     totalPrice += itemTotal;
-    message += `• ${item.name} x${item.quantity} - ${itemTotal.toLocaleString()} UGX\n`;
+
+    message +=
+      `• ${item.name} x${item.quantity} - ${itemTotal.toLocaleString()} UGX\n`;
   });
 
-  message += `\n*Total:* ${totalPrice.toLocaleString()} UGX`;
+  message +=
+    `\n*Total:* ${totalPrice.toLocaleString()} UGX`;
 
-  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
-  window.open(encodedUrl, '_blank');
+  const encodedUrl =
+    `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
+
+  window.open(encodedUrl, "_blank");
 }
 
-// =========================================================
-// FACILITY & ACTIVITIES BOOKING LOGIC
-// =========================================================
-function openBookingModal(categoryName) {
-  const modal = document.getElementById('bookingModal');
-  const title = document.getElementById('bookingModalTitle');
-  const catInput = document.getElementById('bookingCategory');
 
-  if (modal && title && catInput) {
-    title.textContent = `Book ${categoryName}`;
-    catInput.value = categoryName;
-    modal.style.display = 'flex';
+// =========================================================
+// FACILITY BOOKING
+// =========================================================
+
+function openBookingModal(categoryName) {
+
+  const modal =
+    document.getElementById("bookingModal");
+
+  const title =
+    document.getElementById("bookingModalTitle");
+
+  const catInput =
+    document.getElementById("bookingCategory");
+
+  if (!modal || !title || !catInput) return;
+
+  title.textContent =
+    `Book ${categoryName}`;
+
+  catInput.value =
+    categoryName;
+
+  modal.style.display =
+    "flex";
+}
+
+
+function closeBookingModal() {
+
+  const modal =
+    document.getElementById("bookingModal");
+
+  if (modal) {
+    modal.style.display = "none";
   }
 }
 
-function closeBookingModal() {
-  const modal = document.getElementById('bookingModal');
-  if (modal) modal.style.display = 'none';
-}
 
 function handleBookingSubmit(e) {
+
   e.preventDefault();
 
-  const category = document.getElementById('bookingCategory').value;
-  const name = document.getElementById('bookingName').value;
-  const phone = document.getElementById('bookingPhone').value;
-  const date = document.getElementById('bookingDate').value;
-  const guests = document.getElementById('bookingGuests').value;
-  const notes = document.getElementById('bookingNotes').value;
+  const category =
+    document.getElementById("bookingCategory").value;
 
-  let message = `*FACILITY & GAME RESERVATION — KITEEZI RECREATIONAL CENTER*\n\n`;
+  const name =
+    document.getElementById("bookingName").value;
+
+  const phone =
+    document.getElementById("bookingPhone").value;
+
+  const date =
+    document.getElementById("bookingDate").value;
+
+  const guests =
+    document.getElementById("bookingGuests").value;
+
+  const notes =
+    document.getElementById("bookingNotes").value;
+
+  let message =
+    "*FACILITY & GAME RESERVATION — KITEEZI RECREATIONAL CENTER*\n\n";
+
   message += `*Booking Type:* ${category}\n`;
   message += `*Name:* ${name}\n`;
   message += `*Phone:* ${phone}\n`;
   message += `*Date:* ${date}\n`;
   message += `*People:* ${guests}\n`;
-  if (notes) message += `*Notes:* ${notes}\n`;
 
-  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
-  
+  if (notes) {
+    message += `*Notes:* ${notes}\n`;
+  }
+
+  const encodedUrl =
+    `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
+
   closeBookingModal();
+
   e.target.reset();
-  window.open(encodedUrl, '_blank');
+
+  window.open(encodedUrl, "_blank");
 }
 
+
 // =========================================================
-// ADMIN PORTAL LOGIC & SUPABASE AUTHENTICATION
+// PUBLIC MEDIA
 // =========================================================
-async function checkAdminSession() {
+
+async function fetchPublicMedia() {
+
   if (!supabase) return;
-  const { data: { session } } = await supabase.auth.getSession();
-  
+
+  const areas =
+    document.querySelectorAll("[data-media-area]");
+
+  if (!areas.length) return;
+
+  try {
+
+    const { data, error } = await supabase
+      .from("media")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Media error:", error);
+      return;
+    }
+
+    const mediaFiles = data || [];
+
+    areas.forEach(container => {
+
+      const targetArea =
+        container.getAttribute("data-media-area");
+
+      const areaMedia =
+        mediaFiles.filter(
+          item => item.area === targetArea
+        );
+
+      if (!areaMedia.length) {
+        container.innerHTML = "";
+        return;
+      }
+
+      container.innerHTML =
+        areaMedia.map(item => {
+
+          if (item.media_type === "video") {
+
+            return `
+              <video
+                src="${escapeHTML(item.file_url)}"
+                controls
+                class="media-element"
+              ></video>
+            `;
+
+          }
+
+          return `
+            <img
+              src="${escapeHTML(item.file_url)}"
+              alt="Kiteezi Recreational Center"
+              class="media-element"
+            >
+          `;
+
+        }).join("");
+    });
+
+  } catch (error) {
+
+    console.error("Public media error:", error);
+  }
+}
+
+
+// =========================================================
+// PUBLIC PERSONNEL
+// =========================================================
+
+async function fetchPublicPersonnel() {
+
+  const container =
+    document.getElementById("personnel-container");
+
+  if (!container || !supabase) return;
+
+  try {
+
+    const { data, error } = await supabase
+      .from("personnel")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+
+      console.error("Personnel error:", error);
+
+      container.innerHTML =
+        '<p>Unable to load personnel right now.</p>';
+
+      return;
+    }
+
+    if (!data || !data.length) {
+
+      container.innerHTML =
+        '<p>No personnel information available.</p>';
+
+      return;
+    }
+
+    container.innerHTML =
+      data.map(person => `
+
+        <div class="personnel-card">
+
+          ${
+            person.img_url
+              ? `
+                <img
+                  src="${escapeHTML(person.img_url)}"
+                  alt="${escapeHTML(person.name)}"
+                  class="personnel-img"
+                >
+              `
+              : ""
+          }
+
+          <h3>
+            ${escapeHTML(person.name)}
+          </h3>
+
+          <p class="role">
+            ${escapeHTML(person.role)}
+          </p>
+
+          ${
+            person.bio
+              ? `
+                <p class="bio">
+                  ${escapeHTML(person.bio)}
+                </p>
+              `
+              : ""
+          }
+
+        </div>
+
+      `).join("");
+
+  } catch (error) {
+
+    console.error(error);
+  }
+}
+
+
+// =========================================================
+// ADMIN AUTHENTICATION
+// =========================================================
+
+async function checkAdminSession() {
+
+  if (!supabase) return;
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
   if (session) {
     showDashboard(session.user);
   } else {
     showLoginView();
   }
+
+  supabase.auth.onAuthStateChange(
+    async (event, session) => {
+
+      if (session) {
+        showDashboard(session.user);
+      } else {
+        showLoginView();
+      }
+
+    }
+  );
 }
 
-function showDashboard(user) {
-  document.getElementById('admin-login-card').style.display = 'none';
-  document.getElementById('admin-recovery-card').style.display = 'none';
-  document.getElementById('admin-dashboard-view').style.display = 'block';
-  
-  const emailEl = document.getElementById('logged-in-user-email');
-  if (emailEl) emailEl.textContent = user.email;
 
+function showDashboard(user) {
+
+  const loginCard =
+    document.getElementById("admin-login-card");
+
+  const recoveryCard =
+    document.getElementById("admin-recovery-card");
+
+  const dashboard =
+    document.getElementById("admin-dashboard-view");
+
+  if (loginCard) {
+    loginCard.style.display = "none";
+  }
+
+  if (recoveryCard) {
+    recoveryCard.style.display = "none";
+  }
+
+  if (dashboard) {
+    dashboard.style.display = "block";
+  }
+
+  const emailEl =
+    document.getElementById("logged-in-user-email");
+
+  if (emailEl && user) {
+    emailEl.textContent =
+      user.email || "";
+  }
+
+  loadAdminAnnouncement();
   loadAdminMenuItems();
   loadAdminMedia(currentMediaArea);
   loadAdminPersonnel();
   loadAdminReviews();
 }
 
+
 function showLoginView() {
-  document.getElementById('admin-login-card').style.display = 'block';
-  document.getElementById('admin-recovery-card').style.display = 'none';
-  document.getElementById('admin-dashboard-view').style.display = 'none';
-}
 
-function toggleRecoveryView(showRecovery) {
-  document.getElementById('admin-login-card').style.display = showRecovery ? 'none' : 'block';
-  document.getElementById('admin-recovery-card').style.display = showRecovery ? 'block' : 'none';
-}
+  const loginCard =
+    document.getElementById("admin-login-card");
 
-async function handleSupabaseLogin(e) {
-  e.preventDefault();
-  const email = document.getElementById('admin-email').value;
-  const password = document.getElementById('admin-password').value;
+  const recoveryCard =
+    document.getElementById("admin-recovery-card");
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const dashboard =
+    document.getElementById("admin-dashboard-view");
 
-  if (error) {
-    alert('Login failed: ' + error.message);
-  } else {
-    showDashboard(data.user);
+  if (loginCard) {
+    loginCard.style.display = "block";
+  }
+
+  if (recoveryCard) {
+    recoveryCard.style.display = "none";
+  }
+
+  if (dashboard) {
+    dashboard.style.display = "none";
   }
 }
 
+
+function toggleRecoveryView(showRecovery) {
+
+  const loginCard =
+    document.getElementById("admin-login-card");
+
+  const recoveryCard =
+    document.getElementById("admin-recovery-card");
+
+  if (loginCard) {
+    loginCard.style.display =
+      showRecovery ? "none" : "block";
+  }
+
+  if (recoveryCard) {
+    recoveryCard.style.display =
+      showRecovery ? "block" : "none";
+  }
+}
+
+
+async function handleSupabaseLogin(e) {
+
+  e.preventDefault();
+
+  const email =
+    document.getElementById("admin-email").value;
+
+  const password =
+    document.getElementById("admin-password").value;
+
+  const { data, error } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if (error) {
+
+    alert("Login failed: " + error.message);
+    return;
+  }
+
+  showDashboard(data.user);
+}
+
+
 async function handleSupabaseLogout() {
-  await supabase.auth.signOut();
+
+  const { error } =
+    await supabase.auth.signOut();
+
+  if (error) {
+    console.error(error);
+  }
+
   showLoginView();
 }
 
+
 async function handlePasswordRecovery(e) {
+
   e.preventDefault();
-  const email = document.getElementById('recovery-email').value;
-  const { error } = await supabase.auth.resetPasswordForEmail(email);
+
+  const email =
+    document.getElementById("recovery-email").value;
+
+  const { error } =
+    await supabase.auth.resetPasswordForEmail(email);
 
   if (error) {
-    alert('Error sending email: ' + error.message);
-  } else {
-    alert('Password reset link sent to your email.');
-    toggleRecoveryView(false);
+
+    alert(
+      "Error sending email: " +
+      error.message
+    );
+
+    return;
   }
+
+  alert(
+    "Password reset link sent to your email."
+  );
+
+  toggleRecoveryView(false);
 }
 
-async function updateAnnouncement(e) {
-  e.preventDefault();
-  const message = document.getElementById('admin-announcement-input').value;
 
-  const { error } = await supabase
-    .from('site_announcements')
-    .insert([{ message }]);
-
-  if (error) {
-    alert('Failed to update announcement: ' + error.message);
-  } else {
-    alert('Announcement updated successfully!');
-    document.getElementById('admin-announcement-input').value = '';
-  }
-}
+// =========================================================
+// ADMIN MENU MANAGEMENT
+// =========================================================
 
 async function handleSaveMenuItem(e) {
+
   e.preventDefault();
-  const name = document.getElementById('menu-title-input').value;
-  const price = parseFloat(document.getElementById('menu-price-input').value);
-  const category = document.getElementById('menu-category-input').value;
-  const image_url = document.getElementById('menu-img-input').value;
-  const requires_side = document.getElementById('menu-sides-check').checked;
-  const available = document.getElementById('menu-avail-check').checked;
+
+  const name =
+    document.getElementById("menu-title-input").value.trim();
+
+  const price =
+    parseFloat(
+      document.getElementById("menu-price-input").value
+    );
+
+  const category =
+    document.getElementById("menu-category-input").value;
+
+  const img_url =
+    document.getElementById("menu-img-input").value.trim();
+
+  const requires_sides =
+    document.getElementById("menu-sides-check").checked;
+
+  const in_stock =
+    document.getElementById("menu-avail-check").checked;
+
+  if (!name || isNaN(price) || !category) {
+
+    alert(
+      "Please enter the item name, price and category."
+    );
+
+    return;
+  }
 
   const { error } = await supabase
-    .from('menu_items')
-    .insert([{ name, price, category, image_url, requires_side, available }]);
+    .from("menu_items")
+    .insert([
+      {
+        name,
+        price,
+        category,
+        img_url: img_url || null,
+        requires_sides,
+        in_stock
+      }
+    ]);
 
   if (error) {
-    alert('Failed to save item: ' + error.message);
-  } else {
-    alert('Menu item added!');
-    e.target.reset();
-    loadAdminMenuItems();
+
+    console.error(error);
+
+    alert(
+      "Failed to save menu item: " +
+      error.message
+    );
+
+    return;
   }
+
+  alert("Menu item added successfully.");
+
+  e.target.reset();
+
+  await loadAdminMenuItems();
+  await fetchLiveMenuItems();
 }
+
 
 async function loadAdminMenuItems() {
-  const container = document.getElementById('admin-menu-render-list');
-  if (!container) return;
 
-  const { data, error } = await supabase.from('menu_items').select('*').order('id', { ascending: false });
+  const container =
+    document.getElementById("admin-menu-render-list");
 
-  if (error || !data) {
-    container.innerHTML = '<p>No menu items found.</p>';
-    return;
-  }
+  if (!container || !supabase) return;
 
-  container.innerHTML = data.map(item => `
-    <div class="admin-list-item">
-      <div>
-        <strong>${item.name}</strong> - ${item.price} UGX (${item.category})
-      </div>
-      <button class="btn-delete" onclick="deleteMenuItem(${item.id})"><i class="fa-solid fa-trash"></i></button>
-    </div>
-  `).join('');
-}
-
-async function deleteMenuItem(id) {
-  if (!confirm('Delete this menu item?')) return;
-  await supabase.from('menu_items').delete().eq('id', id);
-  loadAdminMenuItems();
-}
-
-async function handleMediaUpload(e) {
-  e.preventDefault();
-  const area = document.getElementById('media-area-input').value;
-  const fileInput = document.getElementById('media-file-input');
-  const file = fileInput.files[0];
-
-  if (!file) return;
-
-  const filePath = `public/${Date.now()}_${file.name}`;
-  const { data, error: uploadError } = await supabase.storage.from('website-media').upload(filePath, file);
-
-  if (uploadError) {
-    alert('Upload failed: ' + uploadError.message);
-    return;
-  }
-
-  const { data: publicUrlData } = supabase.storage.from('website-media').getPublicUrl(filePath);
-
-  const { error: dbError } = await supabase.from('site_media').insert([{
-    area,
-    media_url: publicUrlData.publicUrl,
-    media_type: file.type.startsWith('video/') ? 'video' : 'image'
-  }]);
-
-  if (dbError) {
-    alert('Database save failed: ' + dbError.message);
-  } else {
-    alert('Media uploaded!');
-    fileInput.value = '';
-    loadAdminMedia(area);
-  }
-}
-
-async function loadAdminMedia(area) {
-  const container = document.getElementById('admin-media-list');
-  if (!container) return;
-
-  const { data } = await supabase.from('site_media').select('*').eq('area', area);
-
-  if (!data || data.length === 0) {
-    container.innerHTML = '<p>No media uploaded for this section.</p>';
-    return;
-  }
-
-  container.innerHTML = data.map(item => `
-    <div class="admin-list-item">
-      <span>${item.media_type.toUpperCase()} - ${item.media_url.substring(item.media_url.lastIndexOf('/') + 1)}</span>
-      <button class="btn-delete" onclick="deleteMedia(${item.id})"><i class="fa-solid fa-trash"></i></button>
-    </div>
-  `).join('');
-}
-
-async function deleteMedia(id) {
-  if (!confirm('Delete this media file?')) return;
-  await supabase.from('site_media').delete().eq('id', id);
-  loadAdminMedia(currentMediaArea);
-}
-
-async function handleSavePersonnel(e) {
-  e.preventDefault();
-  const name = document.getElementById('personnel-name-input').value;
-  const role = document.getElementById('personnel-role-input').value;
-  const bio = document.getElementById('personnel-bio-input').value;
-  const image_url = document.getElementById('personnel-image-input').value;
-
-  const { error } = await supabase.from('personnel').insert([{ name, role, bio, image_url }]);
+  const { data, error } =
+    await supabase
+      .from("menu_items")
+      .select("*")
+      .order("id", { ascending: false });
 
   if (error) {
-    alert('Error adding personnel: ' + error.message);
-  } else {
-    alert('Personnel added successfully!');
-    e.target.reset();
-    loadAdminPersonnel();
+
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Unable to load menu items.</p>";
+
+    return;
   }
+
+  if (!data || !data.length) {
+
+    container.innerHTML =
+      "<p>No menu items found.</p>";
+
+    return;
+  }
+
+  container.innerHTML =
+    data.map(item => `
+
+      <div class="admin-list-item">
+
+        <div>
+
+          <strong>
+            ${escapeHTML(item.name)}
+          </strong>
+
+          -
+          ${formatUGX(item.price)}
+
+          (${escapeHTML(item.category)})
+
+          <br>
+
+          <small>
+            ${
+              item.in_stock
+                ? "In stock"
+                : "Out of stock"
+            }
+          </small>
+
+        </div>
+
+        <button
+          class="btn-delete"
+          onclick="deleteMenuItem(${Number(item.id)})"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+      </div>
+
+    `).join("");
 }
+
+
+// Compatibility name
+async function loadAdminMenu() {
+  return loadAdminMenuItems();
+}
+
+
+async function deleteMenuItem(id) {
+
+  if (
+    !confirm(
+      "Are you sure you want to delete this menu item?"
+    )
+  ) {
+    return;
+  }
+
+  const { error } =
+    await supabase
+      .from("menu_items")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Failed to delete menu item: " +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadAdminMenuItems();
+  await fetchLiveMenuItems();
+}
+
+
+// Allows future/admin controls to change stock status
+async function toggleInStock(id, newStatus) {
+
+  const { error } =
+    await supabase
+      .from("menu_items")
+      .update({
+        in_stock: newStatus
+      })
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Failed to update stock status: " +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadAdminMenuItems();
+  await fetchLiveMenuItems();
+}
+
+
+// =========================================================
+// ADMIN MEDIA MANAGEMENT
+// =========================================================
+
+async function handleMediaUpload(e) {
+
+  e.preventDefault();
+
+  const areaInput =
+    document.getElementById("media-area-input");
+
+  const fileInput =
+    document.getElementById("media-file-input");
+
+  if (!areaInput || !fileInput) return;
+
+  const area =
+    areaInput.value;
+
+  const files =
+    Array.from(fileInput.files || []);
+
+  if (!files.length) {
+
+    alert("Please select a file to upload.");
+    return;
+  }
+
+  if (!area) {
+
+    alert("Please select a media area.");
+    return;
+  }
+
+  for (const file of files) {
+
+    try {
+
+      const safeName =
+        file.name
+          .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+      const uniqueName =
+        `${Date.now()}_${Math.random()
+          .toString(36)
+          .substring(2, 8)}_${safeName}`;
+
+      const filePath =
+        `${area}/${uniqueName}`;
+
+      // Upload to actual bucket
+      const {
+        error: uploadError
+      } = await supabase
+        .storage
+        .from("media")
+        .upload(
+          filePath,
+          file,
+          {
+            cacheControl: "3600",
+            upsert: false
+          }
+        );
+
+      if (uploadError) {
+
+        alert(
+          "Upload failed for " +
+          file.name +
+          ": " +
+          uploadError.message
+        );
+
+        continue;
+      }
+
+      const {
+        data: publicUrlData
+      } =
+        supabase
+          .storage
+          .from("media")
+          .getPublicUrl(filePath);
+
+      const file_url =
+        publicUrlData.publicUrl;
+
+      const media_type =
+        file.type.startsWith("video/")
+          ? "video"
+          : "image";
+
+      const {
+        error: dbError
+      } =
+        await supabase
+          .from("media")
+          .insert([
+            {
+              area,
+              file_url,
+              media_type
+            }
+          ]);
+
+      if (dbError) {
+
+        // Remove uploaded file if DB record failed
+        await supabase
+          .storage
+          .from("media")
+          .remove([filePath]);
+
+        alert(
+          "Database save failed for " +
+          file.name +
+          ": " +
+          dbError.message
+        );
+
+        continue;
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Media upload error:",
+        error
+      );
+
+      alert(
+        "Error uploading " +
+        file.name
+      );
+    }
+  }
+
+  alert("Media upload process completed.");
+
+  fileInput.value = "";
+
+  await loadAdminMedia(area);
+  await fetchPublicMedia();
+}
+
+
+// Compatibility name
+async function uploadMediaFile() {
+
+  const fakeEvent = {
+    preventDefault() {}
+  };
+
+  return handleMediaUpload(fakeEvent);
+}
+
+
+async function loadAdminMedia(area = currentMediaArea) {
+
+  const container =
+    document.getElementById("admin-media-list");
+
+  if (!container || !supabase) return;
+
+  currentMediaArea =
+    area || "about";
+
+  const { data, error } =
+    await supabase
+      .from("media")
+      .select("*")
+      .eq("area", currentMediaArea)
+      .order("created_at", {
+        ascending: false
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Unable to load media.</p>";
+
+    return;
+  }
+
+  if (!data || !data.length) {
+
+    container.innerHTML =
+      "<p>No media uploaded for this section.</p>";
+
+    return;
+  }
+
+  container.innerHTML =
+    data.map(item => {
+
+      const filename =
+        item.file_url
+          ? item.file_url
+              .split("/")
+              .pop()
+          : "Media file";
+
+      const preview =
+        item.media_type === "video"
+          ? `
+            <video
+              src="${escapeHTML(item.file_url)}"
+              controls
+              style="max-width:160px;max-height:100px;"
+            ></video>
+          `
+          : `
+            <img
+              src="${escapeHTML(item.file_url)}"
+              alt="Media"
+              style="max-width:160px;max-height:100px;object-fit:cover;"
+            >
+          `;
+
+      return `
+
+        <div class="admin-list-item">
+
+          <div>
+
+            ${preview}
+
+            <br>
+
+            <small>
+              ${escapeHTML(filename)}
+            </small>
+
+          </div>
+
+          <button
+            class="btn-delete"
+            onclick="deleteMedia('${String(item.id)}', '${encodeURIComponent(item.file_url || "")}')"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
+}
+
+
+async function deleteMedia(id, encodedFileUrl) {
+
+  if (
+    !confirm(
+      "Are you sure you want to delete this media file?"
+    )
+  ) {
+    return;
+  }
+
+  const fileUrl =
+    encodedFileUrl
+      ? decodeURIComponent(encodedFileUrl)
+      : "";
+
+  const {
+    error: dbError
+  } =
+    await supabase
+      .from("media")
+      .delete()
+      .eq("id", id);
+
+  if (dbError) {
+
+    alert(
+      "Failed to delete media: " +
+      dbError.message
+    );
+
+    return;
+  }
+
+  // Try to remove actual storage file too
+  if (fileUrl) {
+
+    const marker =
+      "/storage/v1/object/public/media/";
+
+    const markerIndex =
+      fileUrl.indexOf(marker);
+
+    if (markerIndex !== -1) {
+
+      const storagePath =
+        decodeURIComponent(
+          fileUrl.substring(
+            markerIndex + marker.length
+          )
+        );
+
+      if (storagePath) {
+
+        const {
+          error: storageError
+        } =
+          await supabase
+            .storage
+            .from("media")
+            .remove([storagePath]);
+
+        if (storageError) {
+          console.warn(
+            "Storage deletion warning:",
+            storageError
+          );
+        }
+      }
+    }
+  }
+
+  await loadAdminMedia(currentMediaArea);
+  await fetchPublicMedia();
+}
+
+
+// =========================================================
+// ADMIN PERSONNEL MANAGEMENT
+// =========================================================
+
+async function handleSavePersonnel(e) {
+
+  e.preventDefault();
+
+  const name =
+    document
+      .getElementById("personnel-name-input")
+      .value
+      .trim();
+
+  const role =
+    document
+      .getElementById("personnel-role-input")
+      .value
+      .trim();
+
+  const bio =
+    document
+      .getElementById("personnel-bio-input")
+      .value
+      .trim();
+
+  const img_url =
+    document
+      .getElementById("personnel-image-input")
+      .value
+      .trim();
+
+  if (!name || !role) {
+
+    alert(
+      "Please enter the person's name and role."
+    );
+
+    return;
+  }
+
+  const { error } =
+    await supabase
+      .from("personnel")
+      .insert([
+        {
+          name,
+          role,
+          bio,
+          img_url: img_url || null
+        }
+      ]);
+
+  if (error) {
+
+    console.error(error);
+
+    alert(
+      "Error adding personnel: " +
+      error.message
+    );
+
+    return;
+  }
+
+  alert(
+    "Personnel added successfully."
+  );
+
+  e.target.reset();
+
+  await loadAdminPersonnel();
+  await fetchPublicPersonnel();
+}
+
+
+// Compatibility name
+async function savePersonnel() {
+
+  const name =
+    document
+      .getElementById("personnel-name-input")
+      .value
+      .trim();
+
+  const role =
+    document
+      .getElementById("personnel-role-input")
+      .value
+      .trim();
+
+  const bio =
+    document
+      .getElementById("personnel-bio-input")
+      .value
+      .trim();
+
+  const img_url =
+    document
+      .getElementById("personnel-image-input")
+      .value
+      .trim();
+
+  const { error } =
+    await supabase
+      .from("personnel")
+      .insert([
+        {
+          name,
+          role,
+          bio,
+          img_url: img_url || null
+        }
+      ]);
+
+  if (error) {
+
+    alert(
+      "Failed to add personnel: " +
+      error.message
+    );
+
+    return;
+  }
+
+  alert("Personnel added.");
+
+  await loadAdminPersonnel();
+  await fetchPublicPersonnel();
+}
+
 
 async function loadAdminPersonnel() {
-  const container = document.getElementById('admin-personnel-list');
-  if (!container) return;
 
-  const { data } = await supabase.from('personnel').select('*');
+  const list =
+    document.getElementById(
+      "admin-personnel-list"
+    );
 
-  if (!data || data.length === 0) {
-    container.innerHTML = '<p>No personnel added yet.</p>';
+  if (!list || !supabase) return;
+
+  const { data, error } =
+    await supabase
+      .from("personnel")
+      .select("*")
+      .order("created_at", {
+        ascending: true
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    list.innerHTML =
+      "<p>Unable to load personnel.</p>";
+
     return;
   }
 
-  container.innerHTML = data.map(person => `
-    <div class="admin-list-item">
-      <div><strong>${person.name}</strong> - ${person.role}</div>
-      <button class="btn-delete" onclick="deletePersonnel(${person.id})"><i class="fa-solid fa-trash"></i></button>
-    </div>
-  `).join('');
+  if (!data || !data.length) {
+
+    list.innerHTML =
+      "<p>No personnel added yet.</p>";
+
+    return;
+  }
+
+  list.innerHTML =
+    data.map(person => `
+
+      <div class="admin-list-item">
+
+        <div>
+
+          <strong>
+            ${escapeHTML(person.name)}
+          </strong>
+
+          -
+          ${escapeHTML(person.role)}
+
+        </div>
+
+        <button
+          class="btn-delete"
+          onclick="deletePersonnel('${String(person.id)}')"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+      </div>
+
+    `).join("");
 }
+
 
 async function deletePersonnel(id) {
-  if (!confirm('Remove this person?')) return;
-  await supabase.from('personnel').delete().eq('id', id);
-  loadAdminPersonnel();
-}
 
-async function loadAdminReviews() {
-  const container = document.getElementById('admin-reviews-list');
-  if (!container) return;
-
-  const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false });
-
-  if (!data || data.length === 0) {
-    container.innerHTML = '<p>No customer reviews yet.</p>';
+  if (
+    !confirm(
+      "Are you sure you want to remove this person?"
+    )
+  ) {
     return;
   }
 
-  container.innerHTML = data.map(rev => `
-    <div class="admin-list-item">
-      <div>
-        <strong>${rev.name}</strong> (${rev.rating}★): <em>"${rev.message}"</em>
-      </div>
-      <button class="btn-delete" onclick="deleteReview(${rev.id})"><i class="fa-solid fa-trash"></i></button>
-    </div>
-  `).join('');
+  const { error } =
+    await supabase
+      .from("personnel")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Failed to delete personnel: " +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadAdminPersonnel();
+  await fetchPublicPersonnel();
 }
 
-async function deleteReview(id) {
-  if (!confirm('Delete this review?')) return;
-  await supabase.from('reviews').delete().eq('id', id);
-  loadAdminReviews();
+
+// =========================================================
+// ADMIN REVIEWS
+// =========================================================
+
+async function loadAdminReviews() {
+
+  const container =
+    document.getElementById(
+      "admin-reviews-list"
+    );
+
+  if (!container || !supabase) return;
+
+  const { data, error } =
+    await supabase
+      .from("reviews")
+      .select("*")
+      .order("created_at", {
+        ascending: false
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Unable to load reviews.</p>";
+
+    return;
+  }
+
+  if (!data || !data.length) {
+
+    container.innerHTML =
+      "<p>No customer reviews yet.</p>";
+
+    return;
+  }
+
+  container.innerHTML =
+    data.map(review => `
+
+      <div class="admin-list-item">
+
+        <div>
+
+          <strong>
+            ${escapeHTML(review.name)}
+          </strong>
+
+          (${Number(review.rating) || 0}★)
+
+          <br>
+
+          <em>
+            "${escapeHTML(review.message)}"
+          </em>
+
+        </div>
+
+        <button
+          class="btn-delete"
+          onclick="deleteReview('${String(review.id)}')"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+      </div>
+
+    `).join("");
 }
+
+
+async function deleteReview(id) {
+
+  if (
+    !confirm(
+      "Are you sure you want to delete this review?"
+    )
+  ) {
+    return;
+  }
+
+  const { error } =
+    await supabase
+      .from("reviews")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Failed to delete review: " +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadAdminReviews();
+  await fetchReviews();
+}
+
+
+// =========================================================
+// LOAD ALL ADMIN DATA
+// =========================================================
+
+async function loadAllAdminData() {
+
+  await loadAdminAnnouncement();
+  await loadAdminMenuItems();
+  await loadAdminMedia(currentMediaArea);
+  await loadAdminPersonnel();
+  await loadAdminReviews();
+}
+
