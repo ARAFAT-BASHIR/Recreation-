@@ -129,3 +129,107 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchBuffetPackages();
   fetchAnnouncementBanner();
 });
+
+// CHECK SESSION ON LOAD
+document.addEventListener('DOMContentLoaded', async () => {
+  checkAdminSession();
+});
+
+// CHECK IF USER IS LOGGED IN
+async function checkAdminSession() {
+  const loginCard = document.getElementById('admin-login-card');
+  const dashboard = document.getElementById('admin-dashboard-view');
+  if(!loginCard || !dashboard) return;
+
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (session) {
+    loginCard.style.display = 'none';
+    document.getElementById('admin-recovery-card').style.display = 'none';
+    dashboard.style.display = 'block';
+    document.getElementById('logged-in-user-email').innerText = `Logged in as: ${session.user.email}`;
+    fetchAdminItems();
+  } else {
+    loginCard.style.display = 'block';
+    dashboard.style.display = 'none';
+  }
+}
+
+// HANDLE SUPABASE LOGIN
+async function handleSupabaseLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('admin-email').value;
+  const password = document.getElementById('admin-password').value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password,
+  });
+
+  if (error) {
+    alert("Login failed: " + error.message);
+  } else {
+    alert("Login successful!");
+    checkAdminSession();
+  }
+}
+
+// HANDLE LOGOUT
+async function handleSupabaseLogout() {
+  await supabase.auth.signOut();
+  alert("Logged out successfully.");
+  checkAdminSession();
+}
+
+// TOGGLE RECOVERY VIEW
+function toggleRecoveryView(showRecovery) {
+  document.getElementById('admin-login-card').style.display = showRecovery ? 'none' : 'block';
+  document.getElementById('admin-recovery-card').style.display = showRecovery ? 'block' : 'none';
+}
+
+// SEND PASSWORD RECOVERY EMAIL
+async function handlePasswordRecovery(e) {
+  e.preventDefault();
+  const email = document.getElementById('recovery-email').value;
+
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/admin.html',
+  });
+
+  if (error) {
+    alert("Error: " + error.message);
+  } else {
+    alert("Password reset link sent! Check your email inbox.");
+    toggleRecoveryView(false);
+  }
+}
+
+// RENDER ADMIN ITEMS LIST WITH DELETE OPTION
+async function fetchAdminItems() {
+  const container = document.getElementById('admin-menu-render-list');
+  if(!container) return;
+
+  const { data, error } = await supabase.from('menu_items').select('*').order('id', { ascending: false });
+  if(error) return;
+
+  container.innerHTML = '';
+  data.forEach(item => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; justify-between; align-items:center; padding:0.5rem; border-bottom:1fr solid #ddd; background:white; margin-bottom:5px; border-radius:4px;';
+    row.innerHTML = `
+      <div>
+        <strong>${item.name}</strong><br>
+        <small>${Number(item.price).toLocaleString()} UGX - Category: ${item.category}</small>
+      </div>
+      <button onclick="deleteMenuItem(${item.id})" style="background:#dc3545; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// DELETE ITEM
+async function deleteMenuItem(id) {
+  if(!confirm("Are you sure you want to delete this menu item?")) return;
+  const { error } = await supabase.from('menu_items').delete().eq('id', id);
+  if(!error) fetchAdminItems();
+}
