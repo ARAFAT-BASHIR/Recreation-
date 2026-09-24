@@ -3,39 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Restaurant Menu | Kiteezi Recreational Center</title>
+  <title>Restaurant & Buffets | Kiteezi Recreational Center</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
+  <!-- HEADER -->
   <header class="navbar">
-    <div class="logo"><a href="index.html" style="color:white; text-decoration:none;">Kiteezi <span>Recreational Center</span></a></div>
+    <a href="index.html" class="logo">
+      <img src="images/LOGO.png" alt="Kiteezi Recreational Center Logo" class="logo-img">
+    </a>
+
     <div class="header-actions">
       <button class="cart-btn" onclick="toggleCartDrawer()">
-        <i class="fa-solid fa-cart-shopping"></i>
+        <i class="fa-solid fa-cart-shopping"></i> Order Cart
         <span class="cart-badge" id="cart-badge-count">0</span>
       </button>
     </div>
   </header>
 
   <section class="menu-page-header">
-    <h1>Our Live Restaurant Menu</h1>
-    <p>Select your favorite food, pick cooking styles, and order directly on WhatsApp.</p>
+    <h1>Our Live Restaurant &amp; Event Buffets</h1>
+    <p>Select your favorite food or party buffet packages and order directly on WhatsApp.</p>
   </section>
 
   <section id="restaurant" class="section menu-section">
-    <div class="container">
+    <div class="section-container">
       
-      <!-- MENU CATEGORIES INCLUDING BREAKFAST & SNACKS -->
+      <!-- MENU & BUFFET TABS -->
       <div class="menu-tabs">
         <button class="tab-btn active" onclick="filterCategory('all', this)">All Items</button>
-        <button class="tab-btn" onclick="filterCategory('breakfast', this)">Breakfast & Snacks</button>
+        <button class="tab-btn" onclick="filterCategory('breakfast', this)">Breakfast &amp; Snacks</button>
         <button class="tab-btn" onclick="filterCategory('chicken', this)">Chicken</button>
         <button class="tab-btn" onclick="filterCategory('fish', this)">Fish</button>
         <button class="tab-btn" onclick="filterCategory('goat', this)">Goat</button>
         <button class="tab-btn" onclick="filterCategory('liver', this)">Liver</button>
-        <button class="tab-btn" onclick="filterCategory('burgers-pizza', this)">Burgers & Pizzas</button>
+        <button class="tab-btn" onclick="filterCategory('burgers-pizza', this)">Burgers &amp; Pizzas</button>
+        <button class="tab-btn" onclick="filterCategory('buffet', this)">Event Buffets</button>
       </div>
 
       <div class="menu-grid" id="menu-grid">
@@ -48,7 +53,7 @@
   <div id="cart-drawer" class="cart-drawer">
     <div class="cart-header">
       <h3><i class="fa-solid fa-cart-shopping"></i> Your Order</h3>
-      <span class="close-btn" onclick="toggleCartDrawer()">&times;</span>
+      <span class="close-btn" onclick="toggleCartDrawer()" style="position:static; font-size:1.5rem; color:white;">&times;</span>
     </div>
     
     <div class="cart-items-body" id="cart-items-list"></div>
@@ -63,7 +68,7 @@
       <input type="tel" id="cust-phone" placeholder="Phone Number" required>
       <input type="text" id="cust-location" placeholder="Table / Delivery Spot">
 
-      <button class="whatsapp-btn" onclick="checkoutToWhatsApp()">
+      <button class="whatsapp-btn" onclick="checkoutToWhatsApp()" style="margin-top: 0.8rem;">
         <i class="fa-brands fa-whatsapp"></i> Send Order via WhatsApp
       </button>
     </div>
