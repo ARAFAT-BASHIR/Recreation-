@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Kiteezi Recreational Center</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-page-bg">
+
+  <div class="admin-container">
+    
+    <!-- LOGIN VIEW -->
+    <div id="admin-login-view" class="admin-card">
+      <h2><i class="fa-solid fa-user-lock"></i> Kiteezi Admin Portal</h2>
+      <p class="subtitle">Access restricted to staff & management only.</p>
+      
+      <form onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label>Enter Passcode:</label>
+          <input type="password" id="admin-pass-input" placeholder="Passcode (Default: kiteezi2026)" class="full-input" required>
+        </div>
+        <button type="submit" class="btn-primary full-width-btn">Unlock Management Dashboard</button>
+      </form>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="admin-dashboard-view" class="admin-card admin-wide" style="display: none;">
+      <div class="admin-header">
+        <h2><i class="fa-solid fa-gauge"></i> Kiteezi Management Dashboard</h2>
+        <button onclick="location.reload()" class="btn-secondary-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      </div>
+
+      <div class="admin-content-grid">
+        <!-- ADD/EDIT FORM -->
+        <div class="admin-form-box">
+          <h3>Add / Update Menu Item</h3>
+          <form id="add-menu-form" onsubmit="handleSaveMenuItem(event)">
+            <label>Item Name:</label>
+            <input type="text" id="menu-title-input" placeholder="e.g., Whole Nile Perch" required>
+            
+            <div class="two-col-inputs">
+              <div>
+                <label>Price (UGX):</label>
+                <input type="number" id="menu-price-input" placeholder="e.g., 35000" required>
+              </div>
+              <div>
+                <label>Category:</label>
+                <select id="menu-category-input" required>
+                  <option value="chicken">Chicken</option>
+                  <option value="fish">Fish</option>
+                  <option value="goat">Goat</option>
+                  <option value="liver">Liver</option>
+                  <option value="burgers-pizza">Burgers & Pizzas</option>
+                  <option value="breakfast">Breakfast & Snacks</option>
+                </select>
+              </div>
+            </div>
+
+            <label>Image Link (URL):</label>
+            <input type="text" id="menu-img-input" placeholder="Image URL (Leave empty for clean photo)">
+
+            <div class="checkbox-row">
+              <label><input type="checkbox" id="menu-sides-check" checked> Requires Side Choice</label>
+              <label><input type="checkbox" id="menu-avail-check" checked> Currently Available</label>
+            </div>
+
+            <button type="submit" class="btn-primary full-width-btn" style="margin-top: 1rem;">Save Menu Item</button>
+          </form>
+        </div>
+
+        <!-- CURRENT MENU LIST -->
+        <div class="admin-items-list-container">
+          <h3>Current Active Items</h3>
+          <div id="admin-menu-render-list" class="admin-item-scroll">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Ensure dashboard renders list if logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      if(document.getElementById('admin-menu-render-list')) {
+        renderAdminMenuList();
+      }
+    });
+  </script>
+</body>
+</html>
