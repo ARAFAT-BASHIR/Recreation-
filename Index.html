@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiteezi Recreational Center</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="logo">Kiteezi <span>Recreational Center</span></div>
+    <nav>
+      <a href="#hero">Home</a>
+      <a href="#swimming">Swimming Pool</a>
+      <a href="#events">Events & Weddings</a>
+      <a href="#bar">Bar & Sports</a>
+      <a href="#games">Games & Fun</a>
+      <a href="#restaurant">Restaurant Menu</a>
+      <a href="#contact" class="btn-primary">Book Now</a>
+    </nav>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section id="hero" class="hero">
+    <div class="hero-overlay">
+      <h1>Welcome to Kiteezi Recreational Center</h1>
+      <p>Your Ultimate Destination for Fun, Dining, Sports, and Unforgettable Events</p>
+      <div class="hero-buttons">
+        <a href="#restaurant" class="btn-primary">View Restaurant Menu</a>
+        <a href="#events" class="btn-secondary">Host An Event</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SWIMMING POOL SECTION -->
+  <section id="swimming" class="section dark-bg">
+    <div class="container">
+      <h2><i class="fa-solid fa-water-ladder"></i> Swimming Pool & Lessons</h2>
+      <p class="subtitle">Relax, Learn, and Celebrate by the Pool</p>
+      <div class="cards-grid">
+        <div class="card">
+          <i class="fa-solid fa-person-swimming icon"></i>
+          <h3>Daily Swimming</h3>
+          <p>Clean, well-maintained pool suitable for adults and children. Perfect for a refreshing dip or weekend leisure.</p>
+        </div>
+        <div class="card highlight">
+          <i class="fa-solid fa-calendar-star icon"></i>
+          <h3>Monthly Pool Party</h3>
+          <p>Join us <strong>every last Saturday of the month</strong> for live DJ sets, poolside bites, cocktails, and swimming games!</p>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-graduation-cap icon"></i>
+          <h3>Swimming Lessons</h3>
+          <p>Professional swimming instructors available for beginners and advanced swimmers of all age groups.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS & WEDDINGS -->
+  <section id="events" class="section">
+    <div class="container">
+      <h2><i class="fa-solid fa-champagne-glasses"></i> Events & Celebrations</h2>
+      <p class="subtitle">Spacious venues designed for your special occasions</p>
+      <div class="cards-grid">
+        <div class="card">
+          <h3>Weddings & Receptions</h3>
+          <p>Host elegant wedding ceremonies and receptions with customizable outdoor and indoor arrangements.</p>
+        </div>
+        <div class="card">
+          <h3>Birthday Parties</h3>
+          <p>Memorable birthday setups for both adults and kids, complete with customized catering options.</p>
+        </div>
+        <div class="card">
+          <h3>Corporate & Private Events</h3>
+          <p>Ideal space for team building, product launches, family reunions, and anniversaries.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BAR & SPORTS -->
+  <section id="bar" class="section dark-bg">
+    <div class="container">
+      <h2><i class="fa-solid fa-glass-cheers"></i> Sports Bar & Lounge</h2>
+      <p class="subtitle">Cold drinks, good food, and live match screenings</p>
+      <div class="bar-content">
+        <div class="bar-text">
+          <h3>Live Sports Screening</h3>
+          <p>Catch every Premier League, Champions League, and local sports match live on big HD screens with ambient surround sound.</p>
+          <ul class="check-list">
+            <li>Fully stocked bar with local & imported beers, wines, and spirits</li>
+            <li>Cold cocktails & fresh juices</li>
+            <li>Plentiful seating with indoor and poolside lounge options</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMES & ACTIVITIES -->
+  <section id="games" class="section">
+    <div class="container">
+      <h2><i class="fa-solid fa-gamepad"></i> Games & Kids Fun Zone</h2>
+      <p class="subtitle">Entertainment for all ages</p>
+      <div class="cards-grid">
+        <div class="card">
+          <i class="fa-solid fa-football icon"></i>
+          <h3>Football Field</h3>
+          <p>Open ground space for friendly matches, kickabouts, and sports events.</p>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-basketball icon"></i>
+          <h3>Basketball Court</h3>
+          <p>Standard hoop court setup for casual games and tournaments.</p>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-child-reaching icon"></i>
+          <h3>Bouncing Castle & Kids Area</h3>
+          <p>Safe and energetic play zone featuring bouncing castles to keep the children entertained.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESTAURANT MENU SECTION -->
+  <section id="restaurant" class="section menu-section">
+    <div class="container">
+      <h2><i class="fa-solid fa-utensils"></i> Restaurant Menu</h2>
+      <p class="subtitle">Select a main dish to customize your meal and accompaniments</p>
+
+      <!-- Sticky Filter Bar -->
+      <div class="menu-tabs">
+        <button class="tab-btn active" onclick="filterMenu('all')">All</button>
+        <button class="tab-btn" onclick="filterMenu('breakfast')">Breakfast & Snacks</button>
+        <button class="tab-btn" onclick="filterMenu('chicken')">Chicken</button>
+        <button class="tab-btn" onclick="filterMenu('fish')">Fish</button>
+        <button class="tab-btn" onclick="filterMenu('goat')">Goat</button>
+        <button class="tab-btn" onclick="filterMenu('liver')">Liver</button>
+        <button class="tab-btn" onclick="filterMenu('burgers-pizza')">Burgers & Pizzas</button>
+      </div>
+
+      <!-- Food Items Grid -->
+      <div class="menu-grid" id="menu-grid">
+        <!-- JS will dynamically populate items -->
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL FOR ORDER CUSTOMIZATION -->
+  <div id="item-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3 id="modal-title">Item Name</h3>
+      <p id="modal-price" class="modal-price"></p>
+      
+      <div class="modal-body">
+        <h4>1. Choose Preparation / Style:</h4>
+        <div id="modal-prep-options" class="option-group"></div>
+
+        <h4>2. Choose Accompaniment:</h4>
+        <div id="modal-sides-options" class="option-group"></div>
+
+        <h4>3. Special Instructions:</h4>
+        <textarea id="modal-notes" placeholder="e.g., No cooking oil added, extra sauce, crispiness level..."></textarea>
+      </div>
+
+      <button class="btn-primary full-width" onclick="addToOrder()">Add to Order</button>
+    </div>
+  </div>
+
+  <!-- CONTACT / BOOKINGS -->
+  <section id="contact" class="section dark-bg">
+    <div class="container">
+      <h2>Bookings & Enquiries</h2>
+      <p class="subtitle">Get in touch to reserve tables, venues, or swimming lessons</p>
+      <form class="contact-form">
+        <div class="form-group">
+          <input type="text" placeholder="Your Name" required>
+          <input type="tel" placeholder="Phone Number" required>
+        </div>
+        <div class="form-group">
+          <select required>
+            <option value="">Select Service / Inquiry</option>
+            <option value="swimming">Swimming Lessons</option>
+            <option value="pool-party">Pool Party Reservation</option>
+            <option value="event">Wedding / Party Venue Booking</option>
+            <option value="restaurant">Restaurant Table Reservation</option>
+          </select>
+        </div>
+        <textarea placeholder="Tell us more about your event date or requirements..." rows="4"></textarea>
+        <button type="submit" class="btn-primary">Submit Inquiry</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Kiteezi Recreational Center. All Rights Reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
