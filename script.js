@@ -1,8 +1,16 @@
+// =========================================================
 // SUPABASE CLIENT INITIALIZATION
+// =========================================================
 const SUPABASE_URL = "https://qxdtxlphhzkjleqtmuen.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_tVPfEkEPgHfYB8kA_sVw_w_i2b2PVZW";
 
 const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+// Global State Variables
+let allMenuItems = [];
+let shoppingCart = [];
+let currentCategoryFilter = 'all';
+let currentMediaArea = 'about';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Update year dynamically
@@ -26,19 +34,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Fetch Public Content
+  // Public Home Data
   fetchAnnouncements();
   fetchReviews();
   setupReviewSubmission();
+
+  // Check Admin Page Session
+  if (document.getElementById('admin-login-card')) {
+    checkAdminSession();
+  }
+
+  // Fetch Menu Items if on Menu Page
+  if (document.getElementById('menu-grid')) {
+    fetchLiveMenuItems();
+  }
 });
 
-// BANNER DISMISSAL
+// =========================================================
+// ANNOUNCEMENTS & REVIEWS (PUBLIC)
+// =========================================================
 function closeBanner() {
   const banner = document.getElementById('announcement-banner');
   if (banner) banner.style.display = 'none';
 }
 
-// FETCH ANNOUNCEMENTS FROM SUPABASE
 async function fetchAnnouncements() {
   if (!supabase) return;
   try {
@@ -62,7 +81,6 @@ async function fetchAnnouncements() {
   }
 }
 
-// FETCH REVIEWS FROM SUPABASE
 async function fetchReviews() {
   const container = document.getElementById('reviewsContainer');
   if (!container || !supabase) return;
@@ -96,7 +114,6 @@ async function fetchReviews() {
   }
 }
 
-// SUBMIT REVIEWS TO SUPABASE
 function setupReviewSubmission() {
   const form = document.getElementById('reviewForm');
   const status = document.getElementById('reviewStatus');
@@ -143,18 +160,197 @@ function setupReviewSubmission() {
 }
 
 // =========================================================
+// MENU & CART DRAWER FUNCTIONALITY
+// =========================================================
+async function fetchLiveMenuItems() {
+  const grid = document.getElementById('menu-grid');
+  if (!grid || !supabase) return;
+
+  grid.innerHTML = '<p>Loading menu items...</p>';
+
+  const { data, error } = await supabase
+    .from('menu_items')
+    .select('*')
+    .eq('available', true);
+
+  if (error || !data || data.length === 0) {
+    grid.innerHTML = '<p style="grid-column: 1/-1;">No menu items available at the moment.</p>';
+    return;
+  }
+
+  allMenuItems = data;
+  renderMenuItems();
+}
+
+function renderMenuItems() {
+  const grid = document.getElementById('menu-grid');
+  if (!grid) return;
+
+  const filtered = currentCategoryFilter === 'all' 
+    ? allMenuItems 
+    : allMenuItems.filter(item => item.category === currentCategoryFilter);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p style="grid-column: 1/-1;">No items found in this category.</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => `
+    <div class="card">
+      ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:0.8rem;">` : ''}
+      <h3>${item.name}</h3>
+      <p style="color: var(--primary-red); font-weight: bold; margin: 0.5rem 0;">${item.price.toLocaleString()} UGX</p>
+      <button class="btn-primary full-width-btn" onclick="addToCart(${item.id})">
+        <i class="fa-solid fa-plus"></i> Add to Order
+      </button>
+    </div>
+  `).join('');
+}
+
+function filterCategory(category, buttonEl) {
+  currentCategoryFilter = category;
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  if (buttonEl) buttonEl.classList.add('active');
+  renderMenuItems();
+}
+
+function toggleCartDrawer() {
+  const drawer = document.getElementById('cart-drawer');
+  if (drawer) drawer.classList.toggle('open');
+}
+
+function addToCart(itemId) {
+  const item = allMenuItems.find(i => i.id === itemId);
+  if (!item) return;
+
+  const existing = shoppingCart.find(i => i.id === itemId);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    shoppingCart.push({ ...item, quantity: 1 });
+  }
+
+  updateCartUI();
+  toggleCartDrawer();
+}
+
+function removeFromCart(itemId) {
+  shoppingCart = shoppingCart.filter(i => i.id !== itemId);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const list = document.getElementById('cart-items-list');
+  const countEl = document.getElementById('cart-badge-count');
+  const totalEl = document.getElementById('cart-total-price');
+
+  const totalCount = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  if (countEl) countEl.textContent = totalCount;
+  if (totalEl) totalEl.textContent = `${totalPrice.toLocaleString()} UGX`;
+
+  if (!list) return;
+
+  if (shoppingCart.length === 0) {
+    list.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 2rem 0;">Your cart is empty.</p>';
+    return;
+  }
+
+  list.innerHTML = shoppingCart.map(item => `
+    <div class="cart-item">
+      <div>
+        <strong>${item.name}</strong> x ${item.quantity}<br>
+        <small>${(item.price * item.quantity).toLocaleString()} UGX</small>
+      </div>
+      <button class="btn-delete" onclick="removeFromCart(${item.id})">&times;</button>
+    </div>
+  `).join('');
+}
+
+function checkoutToWhatsApp() {
+  if (shoppingCart.length === 0) {
+    alert('Your cart is empty.');
+    return;
+  }
+
+  const name = document.getElementById('cust-name').value;
+  const phone = document.getElementById('cust-phone').value;
+  const location = document.getElementById('cust-location').value;
+
+  if (!name || !phone) {
+    alert('Please enter your Name and Phone Number.');
+    return;
+  }
+
+  let message = `*NEW MENU ORDER — KITEEZI RECREATIONAL CENTER*\n\n`;
+  message += `*Customer Details:*\n`;
+  message += `- Name: ${name}\n`;
+  message += `- Phone: ${phone}\n`;
+  if (location) message += `- Table/Location: ${location}\n`;
+  message += `\n*Order Items:*\n`;
+
+  let totalPrice = 0;
+  shoppingCart.forEach(item => {
+    const itemTotal = item.price * item.quantity;
+    totalPrice += itemTotal;
+    message += `• ${item.name} x${item.quantity} - ${itemTotal.toLocaleString()} UGX\n`;
+  });
+
+  message += `\n*Total:* ${totalPrice.toLocaleString()} UGX`;
+
+  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
+  window.open(encodedUrl, '_blank');
+}
+
+// =========================================================
+// FACILITY & ACTIVITIES BOOKING LOGIC
+// =========================================================
+function openBookingModal(categoryName) {
+  const modal = document.getElementById('bookingModal');
+  const title = document.getElementById('bookingModalTitle');
+  const catInput = document.getElementById('bookingCategory');
+
+  if (modal && title && catInput) {
+    title.textContent = `Book ${categoryName}`;
+    catInput.value = categoryName;
+    modal.style.display = 'flex';
+  }
+}
+
+function closeBookingModal() {
+  const modal = document.getElementById('bookingModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function handleBookingSubmit(e) {
+  e.preventDefault();
+
+  const category = document.getElementById('bookingCategory').value;
+  const name = document.getElementById('bookingName').value;
+  const phone = document.getElementById('bookingPhone').value;
+  const date = document.getElementById('bookingDate').value;
+  const guests = document.getElementById('bookingGuests').value;
+  const notes = document.getElementById('bookingNotes').value;
+
+  let message = `*FACILITY & GAME RESERVATION — KITEEZI RECREATIONAL CENTER*\n\n`;
+  message += `*Booking Type:* ${category}\n`;
+  message += `*Name:* ${name}\n`;
+  message += `*Phone:* ${phone}\n`;
+  message += `*Date:* ${date}\n`;
+  message += `*People:* ${guests}\n`;
+  if (notes) message += `*Notes:* ${notes}\n`;
+
+  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
+  
+  closeBookingModal();
+  e.target.reset();
+  window.open(encodedUrl, '_blank');
+}
+
+// =========================================================
 // ADMIN PORTAL LOGIC & SUPABASE AUTHENTICATION
 // =========================================================
-
-let currentMediaArea = 'about';
-
-// Check session status on page load
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('admin-login-card')) {
-    checkAdminSession();
-  }
-});
-
 async function checkAdminSession() {
   if (!supabase) return;
   const { data: { session } } = await supabase.auth.getSession();
@@ -174,7 +370,6 @@ function showDashboard(user) {
   const emailEl = document.getElementById('logged-in-user-email');
   if (emailEl) emailEl.textContent = user.email;
 
-  // Load Admin Data
   loadAdminMenuItems();
   loadAdminMedia(currentMediaArea);
   loadAdminPersonnel();
@@ -192,7 +387,6 @@ function toggleRecoveryView(showRecovery) {
   document.getElementById('admin-recovery-card').style.display = showRecovery ? 'block' : 'none';
 }
 
-// AUTH HANDLERS
 async function handleSupabaseLogin(e) {
   e.preventDefault();
   const email = document.getElementById('admin-email').value;
@@ -225,7 +419,6 @@ async function handlePasswordRecovery(e) {
   }
 }
 
-// 1. UPDATE ANNOUNCEMENT
 async function updateAnnouncement(e) {
   e.preventDefault();
   const message = document.getElementById('admin-announcement-input').value;
@@ -242,7 +435,6 @@ async function updateAnnouncement(e) {
   }
 }
 
-// 2. MENU MANAGEMENT
 async function handleSaveMenuItem(e) {
   e.preventDefault();
   const name = document.getElementById('menu-title-input').value;
@@ -292,7 +484,6 @@ async function deleteMenuItem(id) {
   loadAdminMenuItems();
 }
 
-// 3. MEDIA MANAGEMENT
 async function handleMediaUpload(e) {
   e.preventDefault();
   const area = document.getElementById('media-area-input').value;
@@ -351,7 +542,6 @@ async function deleteMedia(id) {
   loadAdminMedia(currentMediaArea);
 }
 
-// 4. PERSONNEL MANAGEMENT
 async function handleSavePersonnel(e) {
   e.preventDefault();
   const name = document.getElementById('personnel-name-input').value;
@@ -395,7 +585,6 @@ async function deletePersonnel(id) {
   loadAdminPersonnel();
 }
 
-// 5. REVIEWS MANAGEMENT
 async function loadAdminReviews() {
   const container = document.getElementById('admin-reviews-list');
   if (!container) return;
@@ -421,211 +610,4 @@ async function deleteReview(id) {
   if (!confirm('Delete this review?')) return;
   await supabase.from('reviews').delete().eq('id', id);
   loadAdminReviews();
-}
-// =========================================================
-// MENU & CART DRAWER FUNCTIONALITY
-// =========================================================
-
-let allMenuItems = [];
-let shoppingCart = [];
-let currentCategoryFilter = 'all';
-
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('menu-grid')) {
-    fetchLiveMenuItems();
-  }
-});
-
-// FETCH MENU ITEMS FROM SUPABASE
-async function fetchLiveMenuItems() {
-  const grid = document.getElementById('menu-grid');
-  if (!grid || !supabase) return;
-
-  grid.innerHTML = '<p>Loading menu items...</p>';
-
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*')
-    .eq('available', true);
-
-  if (error || !data || data.length === 0) {
-    grid.innerHTML = '<p style="grid-column: 1/-1;">No menu items available at the moment.</p>';
-    return;
-  }
-
-  allMenuItems = data;
-  renderMenuItems();
-}
-
-// RENDER FILTERED MENU ITEMS
-function renderMenuItems() {
-  const grid = document.getElementById('menu-grid');
-  if (!grid) return;
-
-  const filtered = currentCategoryFilter === 'all' 
-    ? allMenuItems 
-    : allMenuItems.filter(item => item.category === currentCategoryFilter);
-
-  if (filtered.length === 0) {
-    grid.innerHTML = '<p style="grid-column: 1/-1;">No items found in this category.</p>';
-    return;
-  }
-
-  grid.innerHTML = filtered.map(item => `
-    <div class="card">
-      ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:0.8rem;">` : ''}
-      <h3>${item.name}</h3>
-      <p style="color: var(--primary-red); font-weight: bold; margin: 0.5rem 0;">${item.price.toLocaleString()} UGX</p>
-      <button class="btn-primary full-width-btn" onclick="addToCart(${item.id})">
-        <i class="fa-solid fa-plus"></i> Add to Order
-      </button>
-    </div>
-  `).join('');
-}
-
-// FILTER CATEGORY TABS
-function filterCategory(category, buttonEl) {
-  currentCategoryFilter = category;
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  if (buttonEl) buttonEl.classList.add('active');
-  renderMenuItems();
-}
-
-// TOGGLE CART DRAWER
-function toggleCartDrawer() {
-  const drawer = document.getElementById('cart-drawer');
-  if (drawer) drawer.classList.toggle('open');
-}
-
-// CART MANAGEMENT
-function addToCart(itemId) {
-  const item = allMenuItems.find(i => i.id === itemId);
-  if (!item) return;
-
-  const existing = shoppingCart.find(i => i.id === itemId);
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    shoppingCart.push({ ...item, quantity: 1 });
-  }
-
-  updateCartUI();
-  toggleCartDrawer();
-}
-
-function removeFromCart(itemId) {
-  shoppingCart = shoppingCart.filter(i => i.id !== itemId);
-  updateCartUI();
-}
-
-function updateCartUI() {
-  const list = document.getElementById('cart-items-list');
-  const countEl = document.getElementById('cart-badge-count');
-  const totalEl = document.getElementById('cart-total-price');
-
-  const totalCount = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  if (countEl) countEl.textContent = totalCount;
-  if (totalEl) totalEl.textContent = `${totalPrice.toLocaleString()} UGX`;
-
-  if (!list) return;
-
-  if (shoppingCart.length === 0) {
-    list.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 2rem 0;">Your cart is empty.</p>';
-    return;
-  }
-
-  list.innerHTML = shoppingCart.map(item => `
-    <div class="cart-item">
-      <div>
-        <strong>${item.name}</strong> x ${item.quantity}<br>
-        <small>${(item.price * item.quantity).toLocaleString()} UGX</small>
-      </div>
-      <button class="btn-delete" onclick="removeFromCart(${item.id})">&times;</button>
-    </div>
-  `).join('');
-}
-
-// CHECKOUT VIA WHATSAPP
-function checkoutToWhatsApp() {
-  if (shoppingCart.length === 0) {
-    alert('Your cart is empty.');
-    return;
-  }
-
-  const name = document.getElementById('cust-name').value;
-  const phone = document.getElementById('cust-phone').value;
-  const location = document.getElementById('cust-location').value;
-
-  if (!name || !phone) {
-    alert('Please enter your Name and Phone Number.');
-    return;
-  }
-
-  let message = `*NEW MENU ORDER — KITEEZI RECREATIONAL CENTER*\n\n`;
-  message += `*Customer Details:*\n`;
-  message += `- Name: ${name}\n`;
-  message += `- Phone: ${phone}\n`;
-  if (location) message += `- Table/Location: ${location}\n`;
-  message += `\n*Order Items:*\n`;
-
-  let totalPrice = 0;
-  shoppingCart.forEach(item => {
-    const itemTotal = item.price * item.quantity;
-    totalPrice += itemTotal;
-    message += `• ${item.name} x${item.quantity} - ${itemTotal.toLocaleString()} UGX\n`;
-  });
-
-  message += `\n*Total:* ${totalPrice.toLocaleString()} UGX`;
-
-  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
-  window.open(encodedUrl, '_blank');
-}
-
-// =========================================================
-// EVENT & ACTIVITY BOOKING MODAL & WHATSAPP PROCESSOR
-// =========================================================
-
-function openBookingModal(categoryName) {
-  const modal = document.getElementById('bookingModal');
-  const title = document.getElementById('bookingModalTitle');
-  const catInput = document.getElementById('bookingCategory');
-
-  if (modal && title && catInput) {
-    title.textContent = `Book ${categoryName}`;
-    catInput.value = categoryName;
-    modal.style.display = 'flex';
-  }
-}
-
-function closeBookingModal() {
-  const modal = document.getElementById('bookingModal');
-  if (modal) modal.style.display = 'none';
-}
-
-function handleBookingSubmit(e) {
-  e.preventDefault();
-
-  const category = document.getElementById('bookingCategory').value;
-  const name = document.getElementById('bookingName').value;
-  const phone = document.getElementById('bookingPhone').value;
-  const date = document.getElementById('bookingDate').value;
-  const guests = document.getElementById('bookingGuests').value;
-  const notes = document.getElementById('bookingNotes').value;
-
-  let message = `*NEW BOOKING REQUEST — KITEEZI RECREATIONAL CENTER*\n\n`;
-  message += `*Service:* ${category}\n`;
-  message += `*Name:* ${name}\n`;
-  message += `*Phone:* ${phone}\n`;
-  message += `*Date:* ${date}\n`;
-  message += `*Guest Count:* ${guests} people\n`;
-  if (notes) message += `*Notes/Details:* ${notes}\n`;
-
-  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
-  
-  // Close modal and open WhatsApp
-  closeBookingModal();
-  e.target.reset();
-  window.open(encodedUrl, '_blank');
 }
