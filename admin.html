@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard | Kiteezi Recreational Center</title>
+  <title>Admin Portal | Kiteezi Recreational Center</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -11,40 +11,78 @@
 
   <div class="admin-container">
     
-    <div id="admin-login-view" class="admin-card">
-      <h2><i class="fa-solid fa-user-lock"></i> Kiteezi Admin Portal</h2>
-      <form onsubmit="handleAdminLogin(event)">
-        <input type="password" id="admin-pass-input" placeholder="Enter Admin Passcode" required>
-        <button type="submit" class="btn-primary full-width-btn" style="margin-top:1rem;">Unlock Dashboard</button>
+    <!-- LOGIN VIEW -->
+    <div id="admin-login-card" class="admin-card">
+      <h2><i class="fa-solid fa-user-shield"></i> Admin Login</h2>
+      <p class="subtitle" style="margin-bottom: 1rem;">Sign in with your admin credentials</p>
+
+      <form id="login-form" onsubmit="handleSupabaseLogin(event)">
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label>Email Address</label>
+          <input type="email" id="admin-email" placeholder="admin@kiteezi.com" required style="width:100%; padding:0.6rem; margin-top:0.3rem;">
+        </div>
+
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label>Password</label>
+          <input type="password" id="admin-password" placeholder="••••••••" required style="width:100%; padding:0.6rem; margin-top:0.3rem;">
+        </div>
+
+        <button type="submit" class="btn-primary full-width-btn">Sign In</button>
       </form>
+
+      <div style="margin-top: 1rem; text-align: center;">
+        <a href="#" onclick="toggleRecoveryView(true)" style="color: var(--primary-color, #e63946); text-decoration: underline; font-size: 0.9rem;">Forgot Password / Recovery?</a>
+      </div>
     </div>
 
+    <!-- RECOVERY VIEW -->
+    <div id="admin-recovery-card" class="admin-card" style="display: none;">
+      <h2><i class="fa-solid fa-key"></i> Password Recovery</h2>
+      <p class="subtitle" style="margin-bottom: 1rem;">Enter your email to receive a password reset link.</p>
+
+      <form onsubmit="handlePasswordRecovery(event)">
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label>Admin Email</label>
+          <input type="email" id="recovery-email" placeholder="admin@kiteezi.com" required style="width:100%; padding:0.6rem; margin-top:0.3rem;">
+        </div>
+
+        <button type="submit" class="btn-primary full-width-btn">Send Recovery Link</button>
+      </form>
+
+      <div style="margin-top: 1rem; text-align: center;">
+        <a href="#" onclick="toggleRecoveryView(false)" style="color: #666; text-decoration: underline; font-size: 0.9rem;">Back to Login</a>
+      </div>
+    </div>
+
+    <!-- MAIN DASHBOARD PANEL (HIDDEN UNTIL AUTHENTICATED) -->
     <div id="admin-dashboard-view" class="admin-card admin-wide" style="display: none;">
-      <div class="admin-header">
-        <h2><i class="fa-solid fa-gauge"></i> Management Dashboard</h2>
-        <button onclick="location.reload()" class="btn-secondary-sm">Logout</button>
+      <div class="admin-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <div>
+          <h2><i class="fa-solid fa-gauge"></i> Kiteezi Management Dashboard</h2>
+          <span id="logged-in-user-email" style="font-size:0.85rem; color:#666;"></span>
+        </div>
+        <button onclick="handleSupabaseLogout()" class="btn-secondary-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
       </div>
 
-      <!-- MEDIA & ANNOUNCEMENT CONTROL -->
-      <div class="admin-form-box" style="margin-bottom: 2rem;">
-        <h3><i class="fa-solid fa-bullhorn"></i> Announcement & Media Control</h3>
-        <form onsubmit="updateAnnouncement(event)">
-          <label>Top Announcement Bar Text:</label>
-          <input type="text" id="admin-announcement-input" placeholder="e.g., Special Event: Pool Party Every Last Saturday of the Month!" required>
-          <button type="submit" class="btn-primary-sm" style="margin-top:0.5rem;">Update Live Banner</button>
+      <!-- ANNOUNCEMENT & MEDIA CONTROL BAR -->
+      <div class="admin-form-box" style="background:#f8f9fa; padding:1rem; border-radius:8px; margin-bottom: 2rem;">
+        <h3><i class="fa-solid fa-bullhorn"></i> Live Top Banner Control</h3>
+        <form onsubmit="updateAnnouncement(event)" style="display:flex; gap:10px; margin-top:0.5rem;">
+          <input type="text" id="admin-announcement-input" placeholder="e.g., Special Event: Pool Party Every Last Saturday of the Month!" required style="flex:1; padding:0.5rem;">
+          <button type="submit" class="btn-primary-sm">Update Banner</button>
         </form>
       </div>
 
-      <!-- MENU & BUFFET CONTROLS -->
-      <div class="admin-content-grid">
-        <div class="admin-form-box">
-          <h3>Add Menu Item</h3>
-          <form onsubmit="handleSaveMenuItem(event)">
-            <input type="text" id="menu-title-input" placeholder="Item Name" required>
+      <!-- MENU ITEM MANAGEMENT -->
+      <div class="admin-content-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+        <div class="admin-form-box" style="background:#f8f9fa; padding:1rem; border-radius:8px;">
+          <h3>Add / Update Menu Item</h3>
+          <form onsubmit="handleSaveMenuItem(event)" style="display:flex; flex-direction:column; gap:10px; margin-top:0.5rem;">
+            <input type="text" id="menu-title-input" placeholder="Item Name (e.g., Chicken Rolex)" required style="padding:0.5rem;">
             
-            <div class="two-col-inputs">
-              <input type="number" id="menu-price-input" placeholder="Price (UGX)" required>
-              <select id="menu-category-input" required>
+            <div style="display:flex; gap:10px;">
+              <input type="number" id="menu-price-input" placeholder="Price (UGX)" required style="flex:1; padding:0.5rem;">
+              <select id="menu-category-input" required style="flex:1; padding:0.5rem;">
                 <option value="breakfast">Breakfast & Snacks</option>
                 <option value="chicken">Chicken</option>
                 <option value="fish">Fish</option>
@@ -54,20 +92,20 @@
               </select>
             </div>
 
-            <input type="text" id="menu-img-input" placeholder="Image URL">
+            <input type="text" id="menu-img-input" placeholder="Image URL (optional)" style="padding:0.5rem;">
 
-            <div class="checkbox-row">
+            <div style="display:flex; gap:15px; font-size:0.9rem;">
               <label><input type="checkbox" id="menu-sides-check"> Requires Side</label>
-              <label><input type="checkbox" id="menu-avail-check" checked> In Stock</label>
+              <label><input type="checkbox" id="menu-avail-check" checked> Currently Available</label>
             </div>
 
-            <button type="submit" class="btn-primary full-width-btn" style="margin-top:1rem;">Save to Supabase</button>
+            <button type="submit" class="btn-primary full-width-btn" style="padding:0.6rem; margin-top:0.5rem;">Save Menu Item</button>
           </form>
         </div>
 
-        <div class="admin-items-list-container">
-          <h3>Live Database Items</h3>
-          <div id="admin-menu-render-list" class="admin-item-scroll"></div>
+        <div class="admin-items-list-container" style="background:#f8f9fa; padding:1rem; border-radius:8px;">
+          <h3>Current Active Items</h3>
+          <div id="admin-menu-render-list" style="max-height: 350px; overflow-y: auto; margin-top:0.5rem;"></div>
         </div>
       </div>
 
