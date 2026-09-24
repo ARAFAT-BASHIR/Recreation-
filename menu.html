@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant & Drinks Menu | Kiteezi Recreational Center</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="navbar">
+    <div class="logo"><a href="index.html" style="color:white; text-decoration:none;">Kiteezi <span>Recreational Center</span></a></div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="menu.html" class="active">Menu</a>
+    </nav>
+    <div class="header-actions">
+      <button class="cart-btn" onclick="toggleCartDrawer()">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge" id="cart-badge-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MENU HERO BANNER -->
+  <section class="menu-page-header">
+    <h1>Our Restaurant & Drinks Menu</h1>
+    <p>Select your favorite dish to customize cooking styles, accompaniments, and order directly on WhatsApp.</p>
+  </section>
+
+  <!-- RESTAURANT MENU CONTENT -->
+  <section id="restaurant" class="section menu-section">
+    <div class="container">
+
+      <!-- Category Filter Tabs -->
+      <div class="menu-tabs">
+        <button class="tab-btn active" onclick="filterCategory('all', this)">All Items</button>
+        <button class="tab-btn" onclick="filterCategory('chicken', this)">Chicken</button>
+        <button class="tab-btn" onclick="filterCategory('fish', this)">Fish</button>
+        <button class="tab-btn" onclick="filterCategory('goat', this)">Goat</button>
+        <button class="tab-btn" onclick="filterCategory('liver', this)">Liver</button>
+        <button class="tab-btn" onclick="filterCategory('burgers-pizza', this)">Burgers & Pizzas</button>
+        <button class="tab-btn" onclick="filterCategory('breakfast', this)">Snacks & Breakfast</button>
+      </div>
+
+      <!-- Live Menu Grid -->
+      <div class="menu-grid" id="menu-grid">
+        <!-- Javascript renders menu cards here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOMIZATION MODAL -->
+  <div id="customize-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('customize-modal')">&times;</span>
+      <h3 id="modal-item-name">Food Item Name</h3>
+      <p id="modal-item-price" class="modal-price-tag">0 UGX</p>
+      
+      <div class="modal-body">
+        <div class="form-group" id="prep-group">
+          <label><strong>1. Choose Preparation Style:</strong></label>
+          <div id="prep-options-container" class="options-stack"></div>
+        </div>
+
+        <div class="form-group" id="side-group">
+          <label><strong>2. Choose Accompaniment / Side:</strong></label>
+          <div id="side-options-container" class="options-stack"></div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>3. Special Requests or Cooking Notes:</strong></label>
+          <textarea id="item-special-notes" rows="3" placeholder="e.g., No cooking oil, extra chili on the side, well done..."></textarea>
+        </div>
+      </div>
+
+      <button class="btn-primary full-width-btn" onclick="confirmAddToCart()">
+        <i class="fa-solid fa-plus"></i> Add Selection to Cart
+      </button>
+    </div>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3><i class="fa-solid fa-cart-shopping"></i> Your Food & Drinks Order</h3>
+      <span class="close-btn" onclick="toggleCartDrawer()">&times;</span>
+    </div>
+    
+    <div class="cart-items-body" id="cart-items-list">
+      <!-- Added items render here -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-summary-line">
+        <span>Total Amount:</span>
+        <strong id="cart-total-price">0 UGX</strong>
+      </div>
+      
+      <div class="customer-inputs">
+        <input type="text" id="cust-name" placeholder="Your Name" required>
+        <input type="tel" id="cust-phone" placeholder="Phone Number" required>
+        <input type="text" id="cust-location" placeholder="Table Number / Delivery Spot">
+      </div>
+
+      <button class="whatsapp-btn" onclick="checkoutToWhatsApp()">
+        <i class="fa-brands fa-whatsapp"></i> Send Order to WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Kiteezi Recreational Center. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
