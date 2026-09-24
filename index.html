@@ -150,6 +150,92 @@
       </div>
     </section>
 
+
+    <!-- EVENTS, BUFFET & ACTIVITY BOOKINGS -->
+<section class="section dark-bg" id="bookings">
+  <div class="section-container">
+    <span class="subtitle" style="color: var(--primary-red);">RESERVATIONS & PACKAGES</span>
+    <h2>Book Events, Buffets &amp; Activities</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Host your private parties, book buffet packages, or reserve grounds and pool activities.</p>
+
+    <div class="cards-grid">
+      <!-- Event Venue Booking -->
+      <article class="card">
+        <div class="icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+        <h3>Party &amp; Event Booking</h3>
+        <p>Private venues for birthdays, weddings, family gatherings, and corporate retreats.</p>
+        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Event Venue')">Book Venue</button>
+      </article>
+
+      <!-- Buffet Catering Packages -->
+      <article class="card highlight">
+        <div class="icon"><i class="fa-solid fa-utensils"></i></div>
+        <h3>Event Buffet Catering</h3>
+        <p>Custom party buffets featuring fresh local dishes, grilled options, snacks, and drinks.</p>
+        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Event Buffet')">Inquire Buffet</button>
+      </article>
+
+      <!-- Swimming Passes & Lessons -->
+      <article class="card">
+        <div class="icon"><i class="fa-solid fa-water-ladder"></i></div>
+        <h3>Swimming Pools</h3>
+        <p>Day passes for adults &amp; kids, swimming lessons, and private pool party rentals.</p>
+        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Swimming')">Book Pool Access</button>
+      </article>
+
+      <!-- Sports & Games Grounds -->
+      <article class="card">
+        <div class="icon"><i class="fa-solid fa-volleyball"></i></div>
+        <h3>Sports &amp; Games</h3>
+        <p>Volleyball pitch, kids' play area, outdoor games, and team-building packages.</p>
+        <button class="btn-primary full-width-btn" style="margin-top: 1rem;" onclick="openBookingModal('Sports & Games')">Book Sports Grounds</button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- GENERAL BOOKING MODAL -->
+<div class="modal" id="bookingModal" aria-hidden="true">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeBookingModal()">&times;</span>
+    <h3 id="bookingModalTitle" style="margin-bottom: 1rem; color: var(--text-dark);">Book Reservation</h3>
+    
+    <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+      <input type="hidden" id="bookingCategory">
+      
+      <div style="margin-bottom: 0.8rem; text-align: left;">
+        <label style="font-weight: 600; font-size: 0.9rem;">Full Name</label>
+        <input type="text" id="bookingName" placeholder="Your Name" required>
+      </div>
+
+      <div style="margin-bottom: 0.8rem; text-align: left;">
+        <label style="font-weight: 600; font-size: 0.9rem;">Phone Number</label>
+        <input type="tel" id="bookingPhone" placeholder="+256..." required>
+      </div>
+
+      <div style="margin-bottom: 0.8rem; text-align: left;">
+        <label style="font-weight: 600; font-size: 0.9rem;">Event / Visit Date</label>
+        <input type="date" id="bookingDate" required>
+      </div>
+
+      <div style="margin-bottom: 0.8rem; text-align: left;">
+        <label style="font-weight: 600; font-size: 0.9rem;">Estimated Guests / People</label>
+        <input type="number" id="bookingGuests" min="1" placeholder="Number of attendees" required>
+      </div>
+
+      <div style="margin-bottom: 1rem; text-align: left;">
+        <label style="font-weight: 600; font-size: 0.9rem;">Special Requests / Details</label>
+        <textarea id="bookingNotes" rows="3" placeholder="Tell us about food preferences, setup, or specific activities..."></textarea>
+      </div>
+
+      <button type="submit" class="whatsapp-btn">
+        <i class="fa-brands fa-whatsapp"></i> Confirm &amp; Send to WhatsApp
+      </button>
+    </form>
+  </div>
+</div>
+
+    
     <!-- REVIEWS SECTION -->
     <section class="section" id="reviews">
       <div class="section-container">
