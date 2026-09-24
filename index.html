@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kiteezi Recreational Center | Pool, Events, Sports Bar & Lounge</title>
+  <title>Kiteezi Recreational Center | Swimming, Events, Buffet & Sports Bar</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-  <!-- ANNOUNCEMENT BAR -->
-  <div class="announcement-bar">
-    <i class="fa-solid fa-water-ladder"></i> Special Event: Pool Party Every Last Saturday of the Month! Join Us For Live Music & Drinks!
+  <!-- LIVE DYNAMIC ANNOUNCEMENT BAR FROM SUPABASE -->
+  <div id="live-announcement-bar" class="announcement-bar">
+    <i class="fa-solid fa-water-ladder"></i> Loading latest venue updates...
   </div>
 
   <!-- NAVIGATION BAR -->
@@ -20,6 +20,7 @@
     <nav class="nav-links">
       <a href="index.html">Home</a>
       <a href="#swimming">Swimming</a>
+      <a href="#buffet">Buffet & Catering</a>
       <a href="#events">Events & Weddings</a>
       <a href="#bar">Sports Bar</a>
       <a href="#games">Games Zone</a>
@@ -39,7 +40,7 @@
       <p>Your premier destination for swimming, dining, sports screenings, weddings, and family fun.</p>
       <div class="hero-buttons">
         <a href="menu.html" class="btn-primary"><i class="fa-solid fa-utensils"></i> View Menu & Order</a>
-        <a href="#swimming" class="btn-secondary"><i class="fa-solid fa-person-swimming"></i> Swimming Lessons</a>
+        <a href="#buffet" class="btn-secondary"><i class="fa-solid fa-bowl-food"></i> Buffet Packages</a>
       </div>
     </div>
   </section>
@@ -69,8 +70,21 @@
     </div>
   </section>
 
+  <!-- BUFFET & CATERING PACKAGES SECTION (SUPABASE FETCH) -->
+  <section id="buffet" class="section">
+    <div class="container">
+      <h2><i class="fa-solid fa-bowl-food"></i> Event & Party Buffet Packages</h2>
+      <p class="subtitle">Customizable buffet menus tailored for weddings, birthdays, and corporate events</p>
+      
+      <!-- Populated live via Supabase in script.js -->
+      <div class="cards-grid" id="buffet-packages-grid">
+        <p>Loading party and buffet packages...</p>
+      </div>
+    </div>
+  </section>
+
   <!-- EVENTS & WEDDINGS SECTION -->
-  <section id="events" class="section">
+  <section id="events" class="section dark-bg">
     <div class="container">
       <h2><i class="fa-solid fa-holly-berry"></i> Events, Weddings & Receptions</h2>
       <p class="subtitle">Spacious lawns and event spaces designed for all life’s big celebrations</p>
@@ -95,7 +109,7 @@
   </section>
 
   <!-- SPORTS BAR SECTION -->
-  <section id="bar" class="section dark-bg">
+  <section id="bar" class="section">
     <div class="container">
       <h2><i class="fa-solid fa-tv"></i> Sports Bar & Lounge</h2>
       <p class="subtitle">Catch every match live on big screens with cold drinks & crisp audio</p>
@@ -108,7 +122,7 @@
   </section>
 
   <!-- GAMES & KIDS ZONE SECTION -->
-  <section id="games" class="section">
+  <section id="games" class="section dark-bg">
     <div class="container">
       <h2><i class="fa-solid fa-gamepad"></i> Games & Recreation Area</h2>
       <p class="subtitle">Active fun for sports lovers and young children</p>
@@ -139,5 +153,8 @@
     </div>
   </footer>
 
+  <!-- SUPABASE JS SDK & MAIN APPLICATION SCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
 </body>
 </html>
