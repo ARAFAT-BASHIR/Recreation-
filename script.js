@@ -582,3 +582,50 @@ function checkoutToWhatsApp() {
   const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
   window.open(encodedUrl, '_blank');
 }
+
+// =========================================================
+// EVENT & ACTIVITY BOOKING MODAL & WHATSAPP PROCESSOR
+// =========================================================
+
+function openBookingModal(categoryName) {
+  const modal = document.getElementById('bookingModal');
+  const title = document.getElementById('bookingModalTitle');
+  const catInput = document.getElementById('bookingCategory');
+
+  if (modal && title && catInput) {
+    title.textContent = `Book ${categoryName}`;
+    catInput.value = categoryName;
+    modal.style.display = 'flex';
+  }
+}
+
+function closeBookingModal() {
+  const modal = document.getElementById('bookingModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function handleBookingSubmit(e) {
+  e.preventDefault();
+
+  const category = document.getElementById('bookingCategory').value;
+  const name = document.getElementById('bookingName').value;
+  const phone = document.getElementById('bookingPhone').value;
+  const date = document.getElementById('bookingDate').value;
+  const guests = document.getElementById('bookingGuests').value;
+  const notes = document.getElementById('bookingNotes').value;
+
+  let message = `*NEW BOOKING REQUEST — KITEEZI RECREATIONAL CENTER*\n\n`;
+  message += `*Service:* ${category}\n`;
+  message += `*Name:* ${name}\n`;
+  message += `*Phone:* ${phone}\n`;
+  message += `*Date:* ${date}\n`;
+  message += `*Guest Count:* ${guests} people\n`;
+  if (notes) message += `*Notes/Details:* ${notes}\n`;
+
+  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
+  
+  // Close modal and open WhatsApp
+  closeBookingModal();
+  e.target.reset();
+  window.open(encodedUrl, '_blank');
+}
