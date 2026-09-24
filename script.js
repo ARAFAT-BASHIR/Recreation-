@@ -422,3 +422,163 @@ async function deleteReview(id) {
   await supabase.from('reviews').delete().eq('id', id);
   loadAdminReviews();
 }
+// =========================================================
+// MENU & CART DRAWER FUNCTIONALITY
+// =========================================================
+
+let allMenuItems = [];
+let shoppingCart = [];
+let currentCategoryFilter = 'all';
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('menu-grid')) {
+    fetchLiveMenuItems();
+  }
+});
+
+// FETCH MENU ITEMS FROM SUPABASE
+async function fetchLiveMenuItems() {
+  const grid = document.getElementById('menu-grid');
+  if (!grid || !supabase) return;
+
+  grid.innerHTML = '<p>Loading menu items...</p>';
+
+  const { data, error } = await supabase
+    .from('menu_items')
+    .select('*')
+    .eq('available', true);
+
+  if (error || !data || data.length === 0) {
+    grid.innerHTML = '<p style="grid-column: 1/-1;">No menu items available at the moment.</p>';
+    return;
+  }
+
+  allMenuItems = data;
+  renderMenuItems();
+}
+
+// RENDER FILTERED MENU ITEMS
+function renderMenuItems() {
+  const grid = document.getElementById('menu-grid');
+  if (!grid) return;
+
+  const filtered = currentCategoryFilter === 'all' 
+    ? allMenuItems 
+    : allMenuItems.filter(item => item.category === currentCategoryFilter);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p style="grid-column: 1/-1;">No items found in this category.</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => `
+    <div class="card">
+      ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:0.8rem;">` : ''}
+      <h3>${item.name}</h3>
+      <p style="color: var(--primary-red); font-weight: bold; margin: 0.5rem 0;">${item.price.toLocaleString()} UGX</p>
+      <button class="btn-primary full-width-btn" onclick="addToCart(${item.id})">
+        <i class="fa-solid fa-plus"></i> Add to Order
+      </button>
+    </div>
+  `).join('');
+}
+
+// FILTER CATEGORY TABS
+function filterCategory(category, buttonEl) {
+  currentCategoryFilter = category;
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  if (buttonEl) buttonEl.classList.add('active');
+  renderMenuItems();
+}
+
+// TOGGLE CART DRAWER
+function toggleCartDrawer() {
+  const drawer = document.getElementById('cart-drawer');
+  if (drawer) drawer.classList.toggle('open');
+}
+
+// CART MANAGEMENT
+function addToCart(itemId) {
+  const item = allMenuItems.find(i => i.id === itemId);
+  if (!item) return;
+
+  const existing = shoppingCart.find(i => i.id === itemId);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    shoppingCart.push({ ...item, quantity: 1 });
+  }
+
+  updateCartUI();
+  toggleCartDrawer();
+}
+
+function removeFromCart(itemId) {
+  shoppingCart = shoppingCart.filter(i => i.id !== itemId);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const list = document.getElementById('cart-items-list');
+  const countEl = document.getElementById('cart-badge-count');
+  const totalEl = document.getElementById('cart-total-price');
+
+  const totalCount = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = shoppingCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  if (countEl) countEl.textContent = totalCount;
+  if (totalEl) totalEl.textContent = `${totalPrice.toLocaleString()} UGX`;
+
+  if (!list) return;
+
+  if (shoppingCart.length === 0) {
+    list.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 2rem 0;">Your cart is empty.</p>';
+    return;
+  }
+
+  list.innerHTML = shoppingCart.map(item => `
+    <div class="cart-item">
+      <div>
+        <strong>${item.name}</strong> x ${item.quantity}<br>
+        <small>${(item.price * item.quantity).toLocaleString()} UGX</small>
+      </div>
+      <button class="btn-delete" onclick="removeFromCart(${item.id})">&times;</button>
+    </div>
+  `).join('');
+}
+
+// CHECKOUT VIA WHATSAPP
+function checkoutToWhatsApp() {
+  if (shoppingCart.length === 0) {
+    alert('Your cart is empty.');
+    return;
+  }
+
+  const name = document.getElementById('cust-name').value;
+  const phone = document.getElementById('cust-phone').value;
+  const location = document.getElementById('cust-location').value;
+
+  if (!name || !phone) {
+    alert('Please enter your Name and Phone Number.');
+    return;
+  }
+
+  let message = `*NEW MENU ORDER — KITEEZI RECREATIONAL CENTER*\n\n`;
+  message += `*Customer Details:*\n`;
+  message += `- Name: ${name}\n`;
+  message += `- Phone: ${phone}\n`;
+  if (location) message += `- Table/Location: ${location}\n`;
+  message += `\n*Order Items:*\n`;
+
+  let totalPrice = 0;
+  shoppingCart.forEach(item => {
+    const itemTotal = item.price * item.quantity;
+    totalPrice += itemTotal;
+    message += `• ${item.name} x${item.quantity} - ${itemTotal.toLocaleString()} UGX\n`;
+  });
+
+  message += `\n*Total:* ${totalPrice.toLocaleString()} UGX`;
+
+  const encodedUrl = `https://wa.me/256709763803?text=${encodeURIComponent(message)}`;
+  window.open(encodedUrl, '_blank');
+}
